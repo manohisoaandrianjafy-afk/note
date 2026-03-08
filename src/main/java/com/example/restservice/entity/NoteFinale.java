@@ -52,7 +52,11 @@ public class NoteFinale {
         this.matiere = matiere;
     }
 
+    // public void setNoteFinale(double resultat) {
+    //     this.noteFinale = resultat;
+    // }
+
     public void setNoteFinale(BigDecimal noteFinale) {
-        this.noteFinale = noteFinale;
-    }
+    this.noteFinale = noteFinale;
+}
 }
