@@ -110,9 +110,9 @@ public class NoteFinaleService {
         }
 
         
-        if (!params.isEmpty() && sommeDiff == params.get(0).getDiff().doubleValue()) {
-            resultat = moyenne(valeurs);
-        }
+        // if (!params.isEmpty() && sommeDiff == params.get(0).getDiff().doubleValue()) {
+        //     resultat = moyenne(valeurs);
+        // }
 
         
         Candidat candidat = candidatRepository.findById(idCandidat).get();
