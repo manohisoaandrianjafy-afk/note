@@ -94,7 +94,7 @@
 
     <!-- Navbar -->
     <div class="navbar">
-        <h1>Gestion des Notes</h1>
+        <h1>ETU003521</h1>
         <div>
             <a href="/candidat">Candidats</a>
             <a href="/matiere">Matières</a>

@@ -69,14 +69,44 @@ public class NoteFinaleService {
             int operateur = p.getOperateur().getOperateur();
 
            
-            if (operateur == 1 && diffParam < sommeDiff) {
+            // if (operateur == 1 && diffParam < sommeDiff) {
+            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            // }
+
+           
+            // if (operateur == 2 && diffParam > sommeDiff) {
+            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            // }
+
+            
+            // if (operateur == 1 && sommeDiff < diffParam ) {
+            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            // }
+
+           
+            // if (operateur == 2 && sommeDiff > diffParam ) {
+            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            // }
+
+            if (operateur == 1 && sommeDiff < diffParam ) {
                 resultat = appliquerResolution(valeurs, p.getResolution().getNom());
             }
 
            
-            if (operateur == 2 && diffParam > sommeDiff) {
+            if (operateur == 2 && sommeDiff <= diffParam ) {
                 resultat = appliquerResolution(valeurs, p.getResolution().getNom());
             }
+
+            if (operateur == 3 && sommeDiff > diffParam ) {
+                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            }
+
+           
+            if (operateur == 4 && sommeDiff >= diffParam ) {
+                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            }
+
+            
         }
 
         

@@ -78,7 +78,7 @@
 </head>
 
 <body>
-
+     <h1>ETU003521</h1>
     <h2>Calcul Note Finale</h2>
 
     <form action="/notefinale/calculer" method="post">
