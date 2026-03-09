@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "t_noteFinale")
+@Table(name = "t_notefinale")
 public class NoteFinale {
 
     @Id
@@ -52,7 +52,11 @@ public class NoteFinale {
         this.matiere = matiere;
     }
 
+    // public void setNoteFinale(double resultat) {
+    //     this.noteFinale = resultat;
+    // }
+
     public void setNoteFinale(BigDecimal noteFinale) {
-        this.noteFinale = noteFinale;
-    }
+    this.noteFinale = noteFinale;
+}
 }

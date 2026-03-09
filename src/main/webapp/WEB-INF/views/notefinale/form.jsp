@@ -1,17 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Ajouter / Modifier Candidat</title>
-    <!-- Google Fonts Poppins -->
+    <title>Calcul Note Finale</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Reset simple */
+       
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background: #f5f0ff; /* violet très clair */
+            background: #f5f0ff; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -19,7 +20,7 @@
         }
 
         h2 {
-            color: rgb(82, 187, 236); /* violet foncé */
+            color: rgb(82, 187, 236); 
             font-size: 1.8em;
             font-weight: 600;
             margin-top: 40px;
@@ -44,7 +45,7 @@
             display: block;
         }
 
-        input[type="text"] {
+        select {
             padding: 10px 12px;
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -53,7 +54,7 @@
             transition: border 0.3s;
         }
 
-        input[type="text"]:focus {
+        select:focus {
             border-color: rgb(82, 187, 236);
             outline: none;
         }
@@ -77,19 +78,25 @@
 </head>
 
 <body>
+     <h1>ETU003521</h1>
+    <h2>Calcul Note Finale</h2>
 
-    <h2>Ajouter / Modifier Candidat</h2>
+    <form action="/notefinale/calculer" method="post">
+        <label for="idCandidat">Candidat :</label>
+        <select id="idCandidat" name="idCandidat">
+            <c:forEach items="${candidats}" var="c">
+                <option value="${c.id}">${c.nom}</option>
+            </c:forEach>
+        </select>
 
-    <form action="/candidat/save" method="post">
-        <input type="hidden" name="id" value="${candidat.id}"/>
+        <label for="idMatiere">Matière :</label>
+        <select id="idMatiere" name="idMatiere">
+            <c:forEach items="${matieres}" var="m">
+                <option value="${m.id}">${m.nom}</option>
+            </c:forEach>
+        </select>
 
-        <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" value="${candidat.nom}"/>
-
-        <label for="numero">Numero :</label>
-        <input type="text" id="numero" name="numero" value="${candidat.numero}"/>
-
-        <button type="submit">Enregistrer</button>
+        <button type="submit">Calculer</button>
     </form>
 
 </body>
