@@ -19,6 +19,8 @@ import com.example.restservice.repository.MatiereRepository;
 import com.example.restservice.repository.NoteFinaleRepository;
 import com.example.restservice.repository.ParametreRepository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class NoteFinaleService {
 
@@ -36,18 +38,19 @@ public class NoteFinaleService {
 
     @Autowired
     private MatiereRepository matiereRepository;
-
+    
+    @Transactional
     public double calculerNoteFinale(Long idCandidat, Long idMatiere) {
 
         List<Note> notes = noteRepository.findByCandidatIdAndMatiereId(idCandidat, idMatiere);
 
-        // 🔹 Transformer en double pour simplifier
+       
         List<Double> valeurs = new ArrayList<>();
         for (Note n : notes) {
             valeurs.add(n.getNote().doubleValue());
         }
 
-        // 🔹 Calcul de la somme des différences
+        
         double sommeDiff = 0;
         for (int i = 0; i < valeurs.size(); i++) {
             for (int j = i + 1; j < valeurs.size(); j++) {
@@ -59,44 +62,45 @@ public class NoteFinaleService {
 
         double resultat = moyenne(valeurs);
 
-        // 🔹 Appliquer les règles des paramètres
+      
         for (Parametre p : params) {
 
             double diffParam = p.getDiff().doubleValue();
             int operateur = p.getOperateur().getOperateur();
 
-            // diff < sommeDiff → operateur = 1
+           
             if (operateur == 1 && diffParam < sommeDiff) {
                 resultat = appliquerResolution(valeurs, p.getResolution().getNom());
             }
 
-            // diff > sommeDiff → operateur = 2
+           
             if (operateur == 2 && diffParam > sommeDiff) {
                 resultat = appliquerResolution(valeurs, p.getResolution().getNom());
             }
         }
 
-        // Cas sommeDiff == diffParam
+        
         if (!params.isEmpty() && sommeDiff == params.get(0).getDiff().doubleValue()) {
             resultat = moyenne(valeurs);
         }
 
-        // 🔹 Récupérer candidat et matière
+        
         Candidat candidat = candidatRepository.findById(idCandidat).get();
         Matiere matiere = matiereRepository.findById(idMatiere).get();
 
-        // 🔹 Créer et sauvegarder la note finale
+     
         NoteFinale nf = new NoteFinale();
         nf.setCandidat(candidat);
         nf.setMatiere(matiere);
         nf.setNoteFinale(BigDecimal.valueOf(resultat));
 
         noteFinaleRepository.save(nf);
+        noteFinaleRepository.flush();
 
         return resultat;
     }
 
-    // 🔹 Appliquer résolution simple
+   
     private double appliquerResolution(List<Double> notes, String resolution) {
         if (resolution.equals("plus_petit")) {
             return Collections.min(notes);
@@ -107,7 +111,7 @@ public class NoteFinaleService {
         return moyenne(notes);
     }
 
-    // 🔹 Calcul moyenne simple
+    
     private double moyenne(List<Double> notes) {
         if (notes.isEmpty()) return 0;
 
