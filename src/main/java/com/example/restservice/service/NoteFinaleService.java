@@ -38,19 +38,17 @@ public class NoteFinaleService {
 
     @Autowired
     private MatiereRepository matiereRepository;
-    
+
     @Transactional
     public double calculerNoteFinale(Long idCandidat, Long idMatiere) {
 
         List<Note> notes = noteRepository.findByCandidatIdAndMatiereId(idCandidat, idMatiere);
 
-       
         List<Double> valeurs = new ArrayList<>();
         for (Note n : notes) {
             valeurs.add(n.getNote().doubleValue());
         }
 
-        
         double sommeDiff = 0;
         for (int i = 0; i < valeurs.size(); i++) {
             for (int j = i + 1; j < valeurs.size(); j++) {
@@ -62,63 +60,37 @@ public class NoteFinaleService {
 
         double resultat = moyenne(valeurs);
 
-      
-        for (Parametre p : params) {
+        Parametre paramChoisi = trouverParametreLePlusProche(params, sommeDiff);
 
-            double diffParam = p.getDiff().doubleValue();
-            int operateur = p.getOperateur().getOperateur();
+        if (paramChoisi != null) {
 
-           
-            // if (operateur == 1 && diffParam < sommeDiff) {
-            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
-            // }
+            double diffParam = paramChoisi.getDiff().doubleValue();
+            int operateur = paramChoisi.getOperateur().getOperateur();
 
-           
-            // if (operateur == 2 && diffParam > sommeDiff) {
-            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
-            // }
-
-            
-            // if (operateur == 1 && sommeDiff < diffParam ) {
-            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
-            // }
-
-           
-            // if (operateur == 2 && sommeDiff > diffParam ) {
-            //     resultat = appliquerResolution(valeurs, p.getResolution().getNom());
-            // }
-
-            if (operateur == 1 && sommeDiff < diffParam ) {
-                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            if (operateur == 1 && sommeDiff < diffParam) {
+                resultat = appliquerResolution(valeurs, paramChoisi.getResolution().getNom());
             }
 
-           
-            if (operateur == 2 && sommeDiff <= diffParam ) {
-                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            if (operateur == 2 && sommeDiff <= diffParam) {
+                resultat = appliquerResolution(valeurs, paramChoisi.getResolution().getNom());
             }
 
-            if (operateur == 3 && sommeDiff > diffParam ) {
-                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            if (operateur == 3 && sommeDiff > diffParam) {
+                resultat = appliquerResolution(valeurs, paramChoisi.getResolution().getNom());
             }
 
-           
-            if (operateur == 4 && sommeDiff >= diffParam ) {
-                resultat = appliquerResolution(valeurs, p.getResolution().getNom());
+            if (operateur == 4 && sommeDiff >= diffParam) {
+                resultat = appliquerResolution(valeurs, paramChoisi.getResolution().getNom());
             }
-
-            
         }
 
-        
         // if (!params.isEmpty() && sommeDiff == params.get(0).getDiff().doubleValue()) {
         //     resultat = moyenne(valeurs);
         // }
 
-        
         Candidat candidat = candidatRepository.findById(idCandidat).get();
         Matiere matiere = matiereRepository.findById(idMatiere).get();
 
-     
         NoteFinale nf = new NoteFinale();
         nf.setCandidat(candidat);
         nf.setMatiere(matiere);
@@ -130,7 +102,6 @@ public class NoteFinaleService {
         return resultat;
     }
 
-   
     private double appliquerResolution(List<Double> notes, String resolution) {
         if (resolution.equals("plus_petit")) {
             return Collections.min(notes);
@@ -141,9 +112,9 @@ public class NoteFinaleService {
         return moyenne(notes);
     }
 
-    
     private double moyenne(List<Double> notes) {
-        if (notes.isEmpty()) return 0;
+        if (notes.isEmpty())
+            return 0;
 
         double somme = 0;
         for (double n : notes) {
@@ -152,4 +123,28 @@ public class NoteFinaleService {
 
         return somme / notes.size();
     }
+
+    private Parametre trouverParametreLePlusProche(List<Parametre> params, double sommeDiff) {
+
+        Parametre meilleur = null;
+        double distanceMin = Double.MAX_VALUE;
+
+        for (Parametre p : params) {
+            double diff = p.getDiff().doubleValue();
+            double distance = Math.abs(diff - sommeDiff);
+
+            if (distance < distanceMin) {
+                distanceMin = distance;
+                meilleur = p;
+            } else if (distance == distanceMin) {
+
+                if (diff < meilleur.getDiff().doubleValue()) {
+                    meilleur = p;
+                }
+            }
+        }
+
+        return meilleur;
+    }
+
 }
