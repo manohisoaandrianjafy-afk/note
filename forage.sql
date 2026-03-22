@@ -3,6 +3,12 @@ CREATE TABLE t_client (
     nom VARCHAR(100) NOT NULL,
     contact VARCHAR(100)
 );
+INSERT INTO t_client (nom, contact) VALUES
+('Rakoto Jean', '0341234567'),
+('Rabe Marie', '0329876543'),
+('Randria Paul', '0334567890'),
+('Rasoa Lala', '0347654321'),
+('Rakotondrazaka Hery', '0321112233');
 
 CREATE TABLE t_demande (
     id SERIAL PRIMARY KEY,
@@ -15,6 +21,29 @@ CREATE TABLE t_demande (
         REFERENCES t_client(id)
         ON DELETE CASCADE
 );
+INSERT INTO t_demande (id_client, date_demande, lieu, district) VALUES
+-- Client 1
+(1, '2026-01-10', 'Ambohimanarina', 'Antananarivo Avaradrano'),
+(1, '2026-02-15', 'Talatamaty', 'Ambohidratrimo'),
+
+-- Client 2
+(2, '2026-01-05', 'Ivato', 'Ambohidratrimo'),
+(2, '2026-03-01', 'Anosizato', 'Antananarivo Atsimondrano'),
+(2, '2026-03-10', 'Ampefiloha', 'Antananarivo Renivohitra'),
+
+-- Client 3
+(3, '2026-02-20', 'Mahitsy', 'Ambohidratrimo'),
+(3, '2026-02-25', 'Sabotsy Namehana', 'Avaradrano'),
+
+-- Client 4
+(4, '2026-01-18', 'Fenoarivo', 'Avaradrano'),
+(4, '2026-02-22', 'Andoharanofotsy', 'Atsimondrano'),
+(4, '2026-03-05', 'Ankadindratombo', 'Avaradrano'),
+
+-- Client 5
+(5, '2026-01-30', 'Ambohibao', 'Ambohidratrimo'),
+(5, '2026-02-12', 'Ambatolampy', 'Vakinankaratra');
+
 
 CREATE TABLE t_status (
     id SERIAL PRIMARY KEY,

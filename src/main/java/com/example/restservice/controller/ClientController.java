@@ -33,6 +33,13 @@ public class ClientController {
         return "redirect:/client";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Integer id, Model model) {
+        Client client = service.getById(id);
+        model.addAttribute("client", client);
+        return "client/form";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         service.delete(id);
