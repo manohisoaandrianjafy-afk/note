@@ -4,20 +4,20 @@
 
 <head>
     <title>Accueil</title>
-    <!-- Google Fonts Poppins -->
+ 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Reset simple */
+      
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Navbar */
+
         .navbar {
-            background-color:  rgb(82, 187, 236); /* violet foncé */
+            background-color:  rgb(82, 187, 236); 
             color: white;
             padding: 15px 30px;
             display: flex;
@@ -44,19 +44,19 @@
             opacity: 0.8;
         }
 
-        /* Page background */
+       
         body {
-            background: #f5f0ff; /* violet très clair */
+            background: #f5f0ff; 
             text-align: center;
         }
 
         h2 {
-            color: rgb(82, 187, 236); /* violet foncé */
+            color: rgb(82, 187, 236); 
             font-size: 1.8em;
             font-weight: 600;
         }
 
-        /* Cards container */
+        
         .card-container {
             display: flex;
             justify-content: center;
@@ -65,7 +65,7 @@
             padding: 20px;
         }
 
-        /* Card style */
+       
         .card {
             background: linear-gradient(145deg, #ffffff, #ffffff);
             color: rgb(82, 187, 236);

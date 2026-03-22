@@ -25,11 +25,17 @@
             margin-bottom: 20px;
         }
 
+        h1 {
+            font-size: 45pt;
+            font-weight: 700;
+        }
+        
         h3 {
             background: #fff;
             padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 12px 20px rgba(73, 73, 73, 0.11);
+             font-size: 23pt;
             font-weight: 600;
             color: #333;
             margin-bottom: 30px;
@@ -53,10 +59,8 @@
 </head>
 
 <body>
-     <h1>ETU003521</h1>
-    <h2>Note Finale</h2>
-
-    <h3>${resultat}</h3>
+     <h1>ETU3521</h1>
+    <h3>Resultat : ${resultat}</h3>
 
     <a href="/notefinale/form">Retour</a>
 
