@@ -3,6 +3,8 @@ package com.example.restservice.entity;
 import jakarta.persistence.*;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "t_demande")
 public class Demande {
@@ -16,7 +18,10 @@ public class Demande {
     private Client client;
 
     @Temporal(TemporalType.DATE)
-    private Date dateDemande;
+@DateTimeFormat(pattern = "yyyy-MM-dd")
+private Date dateDemande;
+
+   
 
     private String lieu;
     private String district;

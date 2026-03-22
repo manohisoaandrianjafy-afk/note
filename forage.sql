@@ -49,7 +49,12 @@ CREATE TABLE t_status (
     id SERIAL PRIMARY KEY,
     libelle VARCHAR(100) NOT NULL
 );
--- exemples : devis accepté, devis refusé, forage commencé, forage terminé, analyse terrain
+INSERT INTO t_status (libelle) VALUES
+('Devis accepté'),
+('Devis refusé'),
+('Forage commencé'),
+('Forage terminé'),
+('Analyse terrain');
 
 CREATE TABLE t_demande_status (
     id SERIAL PRIMARY KEY,

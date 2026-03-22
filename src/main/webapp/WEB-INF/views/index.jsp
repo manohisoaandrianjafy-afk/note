@@ -111,6 +111,7 @@
         <a class="card" href="/notefinale/form">Gestion des Notes Finale</a>
          <a class="card" href="/client">Gestion des clients</a>
          <a class="card" href="/demandeClient">Gestion des demandes du client</a>
+          <a class="card" href="/demandeStatus">Gestion des status de demandes du client</a>
     </div>
 
 </body>
