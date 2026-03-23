@@ -48,7 +48,7 @@ public class NoteFinaleService {
         for (Note n : notes) {
             valeurs.add(n.getNote().doubleValue());
         }
-
+                
         double sommeDiff = 0;
         for (int i = 0; i < valeurs.size(); i++) {
             for (int j = i + 1; j < valeurs.size(); j++) {
@@ -148,3 +148,4 @@ public class NoteFinaleService {
     }
 
 }
+
