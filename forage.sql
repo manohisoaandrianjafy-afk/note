@@ -101,10 +101,9 @@ CREATE TABLE t_details_devis (
     id_devis INT NOT NULL,
     libelle VARCHAR(150) NOT NULL,
     prix NUMERIC(12,2) NOT NULL,
+    quantite NUMERIC(12,2) NOT NULL,
     CONSTRAINT fk_details_devis
         FOREIGN KEY (id_devis)
         REFERENCES t_devis(id)
         ON DELETE CASCADE
 );
-
-ALTER TABLE t_details_devis ADD COLUMN quantite;
