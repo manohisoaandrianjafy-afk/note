@@ -50,8 +50,12 @@ CREATE TABLE t_status (
     libelle VARCHAR(100) NOT NULL
 );
 INSERT INTO t_status (libelle) VALUES
-('Devis accepté'),
-('Devis refusé'),
+('Cree'),
+('Devis Cree'),
+('Devis Etude accepté'),
+('Devis Etude refusé'),
+('Devis Forage accepté'),
+('Devis Forage refusé'),
 ('Forage commencé'),
 ('Forage terminé'),
 ('Analyse terrain');
@@ -100,3 +104,4 @@ CREATE TABLE t_details_devis (
         REFERENCES t_devis(id)
         ON DELETE CASCADE
 );
+
