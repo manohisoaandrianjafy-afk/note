@@ -9,25 +9,26 @@
     <br><br>
 
     <div id="resultat" style="display:none;">
-
-        <p><strong>Client :</strong> <span id="client"></span></p>
-
-        <p><strong>Date :</strong> <span id="dateDemande"></span></p>
-
-        <p><strong>Lieu :</strong> <span id="lieu"></span></p>
-
-        <p><strong>District :</strong> <span id="district"></span></p>
-
+        <p><strong>Client :</strong> <span id="client"></span>,
+        <strong>Date :</strong> <span id="dateDemande"></span>,
+        <strong>Lieu :</strong> <span id="lieu"></span>,
+        <strong>District :</strong> <span id="district"></span></p>
     </div>
 
+    <br><br>
+
+    Type de devis :
+        <select name="typeDevis.id">
+            <c:forEach items="${typesDevis}" var="t">
+            <option value="${t.id}">${t.libelle}</option>
+            </c:forEach>
+        </select>
 </form>
 
 <script>
 function fetchDemande() {
     let id = document.getElementById("demandeId").value;
     if (!id) return;
-
-    let contextPath = window.location.pathname.split('/')[1];
 
     fetch("http://localhost:8080/demandeClient/get/" + id)
         .then(response => {
@@ -36,7 +37,6 @@ function fetchDemande() {
         })
         .then(data => {
             document.getElementById("resultat").style.display = "block";
-
             document.getElementById("client").innerText = data.client.nom;
             document.getElementById("dateDemande").innerText = data.dateDemande;
             document.getElementById("lieu").innerText = data.lieu;

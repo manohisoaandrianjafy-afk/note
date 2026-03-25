@@ -78,7 +78,9 @@ CREATE TABLE t_typedevis (
     id SERIAL PRIMARY KEY,
     libelle VARCHAR(100) NOT NULL
 );
--- exemples : étude, forage
+INSERT INTO t_typedevis (libelle) VALUES
+('Etude'),
+('Forage');
 
 CREATE TABLE t_devis (
     id SERIAL PRIMARY KEY,
