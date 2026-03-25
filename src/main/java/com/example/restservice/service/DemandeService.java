@@ -39,7 +39,7 @@ public class DemandeService {
 
     public void save(Demande demande) {
         Demande savedDemande = repo.save(demande);
-        Status status = statusRepo.findByLibelle("Créé");
+        Status status = statusRepo.findByLibelle("Cree");
         DemandeStatus ds = new DemandeStatus();
         ds.setDemande(savedDemande);
         ds.setStatus(status);
