@@ -1,7 +1,9 @@
 package com.example.restservice.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "t_demande_status")
@@ -19,8 +21,7 @@ public class DemandeStatus {
     @JoinColumn(name = "id_status")
     private Status status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateStatus = new Date();
+    private LocalDateTime dateStatus; // plus @Temporal
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -31,6 +32,6 @@ public class DemandeStatus {
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
 
-    public Date getDateStatus() { return dateStatus; }
-    public void setDateStatus(Date dateStatus) { this.dateStatus = dateStatus; }
+    public LocalDateTime getDateStatus() { return dateStatus; }
+    public void setDateStatus(LocalDateTime dateStatus) { this.dateStatus = dateStatus; }
 }
