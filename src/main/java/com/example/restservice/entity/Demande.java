@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "t_demande")
 public class Demande {
