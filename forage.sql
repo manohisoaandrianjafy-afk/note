@@ -107,3 +107,4 @@ CREATE TABLE t_details_devis (
         ON DELETE CASCADE
 );
 
+ALTER TABLE t_details_devis ADD COLUMN quantite;

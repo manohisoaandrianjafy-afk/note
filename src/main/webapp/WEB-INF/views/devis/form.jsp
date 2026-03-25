@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <h2>Creation Devis</h2>
+
 <form id="demandeForm">
 
     Ref Demande (ID) :
@@ -23,6 +24,28 @@
             <option value="${t.id}">${t.libelle}</option>
             </c:forEach>
         </select>
+
+    <h3>Détails du devis</h3>
+   
+    <div id="details-container">
+    <button type="button" onclick="ajouterLigne()">Ajouter details devis</button>
+    <br><br>
+    <div class="detail-row">
+        Libellé :
+        <input type="text" name="details[0].libelle" />
+        Prix :
+        <input type="number" name="details[0].prix" class="prix" />
+        Quantité :
+        <input type="number" name="details[0].quantite" class="quantite" />
+        Montant :
+        <input type="number" name="details[0].montant" class="montant" readonly />
+        <button type="button" onclick="supprimerLigne(this)">Effacer details</button>
+    </div>
+
+    
+
+</div>
+
 </form>
 
 <script>
@@ -46,5 +69,51 @@ function fetchDemande() {
             alert(err.message);
             document.getElementById("resultat").style.display = "none";
         });
+}
+</script>
+
+<script>
+let index = 1;
+function ajouterLigne() {
+    let container = document.getElementById("details-container");
+    let div = document.createElement("div");
+    div.classList.add("detail-row");
+    div.innerHTML = `
+        <br>
+        Libellé :
+        <input type="text" name="details[${index}].libelle" />
+
+        Prix :
+        <input type="number" name="details[${index}].prix" class="prix" />
+
+        Quantité :
+        <input type="number" name="details[${index}].quantite" class="quantite" />
+
+        Montant :
+        <input type="number" name="details[${index}].montant" class="montant" readonly />
+
+        <button type="button" onclick="supprimerLigne(this)">Effacer details</button>
+    `;
+    container.appendChild(div);
+    index++;
+}
+</script>
+
+<script>
+document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("prix") || e.target.classList.contains("quantite")) {
+        let row = e.target.parentElement;
+        let prix = row.querySelector(".prix").value;
+        let quantite = row.querySelector(".quantite").value;
+        let montant = row.querySelector(".montant");
+
+        montant.value = (prix * quantite) || 0;
+    }
+});
+</script>
+<script>
+function supprimerLigne(button) {
+    let row = button.parentElement;
+    row.remove();
 }
 </script>
