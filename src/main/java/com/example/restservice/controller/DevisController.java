@@ -3,9 +3,12 @@ package com.example.restservice.controller;
 import com.example.restservice.entity.Devis;
 import com.example.restservice.entity.DevisDTO;
 import com.example.restservice.service.DevisService;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/devis")
 public class DevisController {
 
@@ -18,5 +21,11 @@ public class DevisController {
     @PostMapping("/create")
     public Devis createDevis(@RequestBody DevisDTO dto) {
         return devisService.creerDevis(dto);
+    }
+
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("devis", devisService.getAll());
+        return "devis/list";
     }
 }

@@ -51,7 +51,8 @@ CREATE TABLE t_status (
 );
 INSERT INTO t_status (libelle) VALUES
 ('Cree'),
-('Devis Cree'),
+('Devis Etude Cree'),
+('Devis Forage Cree'),
 ('Devis Etude accepté'),
 ('Devis Etude refusé'),
 ('Devis Forage accepté'),
@@ -59,6 +60,9 @@ INSERT INTO t_status (libelle) VALUES
 ('Forage commencé'),
 ('Forage terminé'),
 ('Analyse terrain');
+
+---devis etude cree6
+---devis forage cree
 
 CREATE TABLE t_demande_status (
     id SERIAL PRIMARY KEY,

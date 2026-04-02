@@ -69,4 +69,8 @@ public class DevisService {
 
         return devis;
     }
+
+    public List<Devis> getAll() {
+        return devisRepo.findAllWithDetails();
+    }
 }

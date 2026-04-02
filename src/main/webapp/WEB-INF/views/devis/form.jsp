@@ -1,7 +1,89 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<h2>Creation Devis</h2>
+<style>
+    /* Global */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        padding: 20px;
+    }
+
+    h2, h3 {
+        color: #222;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 1000px;
+        margin: auto;
+        box-sizing: border-box;
+    }
+
+    /* Inputs and selects */
+    input[type="text"], input[type="number"], select {
+        padding: 8px 12px;
+        margin: 5px 0 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: calc(100% - 26px);
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    select {
+        width: 100%;
+    }
+
+    /* Buttons */
+    button {
+        padding: 8px 16px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .detail-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    .detail-row input {
+        width: auto;
+        flex: 1;
+        min-width: 100px;
+    }
+
+    #totalGeneral {
+        width: 200px;
+        font-weight: bold;
+        background-color: #eaeaea;
+        border: 1px solid #ccc;
+    }
+
+    #resultat p {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+</style>
+
+<h2>Création Devis</h2>
 <form id="demandeForm">
 
     Ref Demande (ID) :
@@ -15,35 +97,41 @@
         <strong>District :</strong> <span id="district"></span></p>
     </div>
 
-    <br><br>
-
     Type de devis :
-        <select name="typeDevis.id">
-            <c:forEach items="${typesDevis}" var="t">
+    <select name="typeDevis.id">
+        <c:forEach items="${typesDevis}" var="t">
             <option value="${t.id}">${t.libelle}</option>
-            </c:forEach>
-        </select>
+        </c:forEach>
+    </select>
 
     <h3>Détails du devis</h3>
-   
-    <div id="details-container">
-          <button type="button" onclick="ajouterLigne()">Ajouter details devis</button>
-    <br><br>
-    <div class="detail-row">
-        Libellé :
-        <input type="text" name="details[0].libelle" />
-        Prix :
-        <input type="number" name="details[0].prix" class="prix" />
-        Quantité :
-        <input type="number" name="details[0].quantite" class="quantite" />
-        Montant :
-        <input type="number" name="details[0].montant" class="montant" readonly />
-        <button type="button" onclick="supprimerLigne(this)">Effacer details</button>
-    </div>
-    </div>
- <br>
-    <button type="button" onclick="validerDevis()">Valider</button>
 
+    <div id="details-container">
+        <button type="button" onclick="ajouterLigne()">Ajouter détails devis</button>
+
+        <div class="detail-row">
+            Libellé :
+            <input type="text" name="details[0].libelle" />
+
+            Prix :
+            <input type="number" name="details[0].prix" class="prix" />
+
+            Quantité :
+            <input type="number" name="details[0].quantite" class="quantite" />
+
+            Montant :
+            <input type="number" name="details[0].montant" class="montant" readonly />
+
+            <button type="button" onclick="supprimerLigne(this)">Effacer</button>
+        </div>
+    </div>
+
+    <h3>Total Général :</h3>
+    <input type="number" id="totalGeneral" readonly />
+
+    <br><br>
+
+    <button type="button" onclick="validerDevis()">Valider</button>
 </form>
 
 <script>
@@ -68,16 +156,13 @@ function fetchDemande() {
             document.getElementById("resultat").style.display = "none";
         });
 }
-</script>
 
-<script>
 let index = 1;
 function ajouterLigne() {
     let container = document.getElementById("details-container");
     let div = document.createElement("div");
     div.classList.add("detail-row");
     div.innerHTML = `
-        <br>
         Libellé :
         <input type="text" name="details[${index}].libelle" />
 
@@ -90,14 +175,13 @@ function ajouterLigne() {
         Montant :
         <input type="number" name="details[${index}].montant" class="montant" readonly />
 
-        <button type="button" onclick="supprimerLigne(this)">Effacer details</button>
+        <button type="button" onclick="supprimerLigne(this)">Effacer</button>
     `;
     container.appendChild(div);
     index++;
+    calculerTotalGeneral();
 }
-</script>
 
-<script>
 document.addEventListener("input", function(e) {
     if (e.target.classList.contains("prix") || e.target.classList.contains("quantite")) {
         let row = e.target.parentElement;
@@ -106,51 +190,30 @@ document.addEventListener("input", function(e) {
         let montant = row.querySelector(".montant");
 
         montant.value = (prix * quantite) || 0;
+        calculerTotalGeneral();
     }
 });
-</script>
-<script>
+
 function supprimerLigne(button) {
     let row = button.parentElement;
     row.remove();
+    calculerTotalGeneral();
 }
-</script>
 
-<!-- <script>
-function submitForm() {
-    const form = document.getElementById("demandeForm");
-    let details = [];
-    document.querySelectorAll(".detail-row").forEach((row) => {
-        details.push({
-            libelle: row.querySelector("input[name*='libelle']").value,
-            prix: parseFloat(row.querySelector(".prix").value) || 0,
-            quantite: parseFloat(row.querySelector(".quantite").value) || 0
-        });
+function calculerTotalGeneral() {
+    let total = 0;
+    document.querySelectorAll(".montant").forEach(input => {
+        total += parseFloat(input.value) || 0;
     });
-
-    const dto = {
-        demandeId: parseInt(document.getElementById("demandeId").value),
-        typeDevisId: parseInt(form.querySelector("select[name='typeDevis.id']").value),
-        details: details
-    };
-
-    fetch("http://localhost:8080/devis/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dto)
-    })
-    .then(res => res.json())
-    .then(data => alert("Devis créé avec succès !"))
-    .catch(err => alert("Erreur : " + err));
+    document.getElementById("totalGeneral").value = total;
 }
-</script> -->
-<script>
+
 function validerDevis() {
     let demandeId = document.getElementById("demandeId").value;
     let typeDevisId = document.querySelector("select[name='typeDevis.id']").value;
 
     let details = [];
-    document.querySelectorAll(".detail-row").forEach((row) => {
+    document.querySelectorAll(".detail-row").forEach(row => {
         details.push({
             libelle: row.querySelector("input[name*='libelle']").value,
             prix: parseFloat(row.querySelector(".prix").value) || 0,
