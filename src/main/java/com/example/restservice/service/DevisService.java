@@ -84,4 +84,28 @@ public class DevisService {
     public List<Devis> getAll() {
         return devisRepo.findAllWithDetails();
     }
+
+public List<DevisListDTO> getAllDevisAvecStatus() {
+
+    List<Devis> devisList = devisRepo.findAllWithDemandeAndClient();
+    List<DevisListDTO> result = new ArrayList<>();
+
+    for (Devis d : devisList) {
+
+        // récupérer dernier status
+        DemandeStatus ds = dsRepo.findTopByDemandeOrderByDateStatusDesc(d.getDemande());
+
+        String status = (ds != null) ? ds.getStatus().getLibelle() : "Aucun";
+
+        result.add(new DevisListDTO(
+                d.getId(),
+                d.getDemande().getClient().getNom(),
+                status,
+                d.getMontantTotal()
+        ));
+    }
+
+    return result;
+}
+    
 }

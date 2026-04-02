@@ -2,7 +2,10 @@ package com.example.restservice.controller;
 
 import com.example.restservice.entity.Devis;
 import com.example.restservice.entity.DevisDTO;
+import com.example.restservice.entity.DevisListDTO;
 import com.example.restservice.service.DevisService;
+
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,5 +30,11 @@ public class DevisController {
     public String list(Model model) {
         model.addAttribute("devis", devisService.getAll());
         return "devis/list";
+    }
+
+    @GetMapping("/list-data")
+    @ResponseBody
+    public List<DevisListDTO> getListData() {
+        return devisService.getAllDevisAvecStatus();
     }
 }

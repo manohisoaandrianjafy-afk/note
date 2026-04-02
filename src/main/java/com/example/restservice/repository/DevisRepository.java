@@ -11,4 +11,13 @@ public interface DevisRepository extends JpaRepository<Devis, Integer> {
     @Query("SELECT d FROM Devis d LEFT JOIN FETCH d.details")
     List<Devis> findAllWithDetails();
 
+
+    @Query("""
+        SELECT d FROM Devis d
+        JOIN FETCH d.demande dem
+        JOIN FETCH dem.client
+        JOIN FETCH d.typeDevis
+    """)
+    List<Devis> findAllWithDemandeAndClient();
+
 }
