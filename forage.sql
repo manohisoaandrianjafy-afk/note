@@ -61,9 +61,6 @@ INSERT INTO t_status (libelle) VALUES
 ('Forage terminé'),
 ('Analyse terrain');
 
----devis etude cree6
----devis forage cree
-
 CREATE TABLE t_demande_status (
     id SERIAL PRIMARY KEY,
     id_demande INT NOT NULL,

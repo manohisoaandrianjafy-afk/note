@@ -59,7 +59,18 @@ public class DevisService {
         devis.setMontantTotal(total);
         devis.setDetails(detailsList);
         devisRepo.save(devis);
-        Status status = statusRepo.findByLibelle("Devis Cree");
+        // Status status = statusRepo.findByLibelle("Devis Cree");
+        String libelleStatus;
+
+        if (typeDevis.getLibelle().equalsIgnoreCase("Etude")) {
+            libelleStatus = "Devis Etude Cree";
+        } else if (typeDevis.getLibelle().equalsIgnoreCase("Forage")) {
+            libelleStatus = "Devis Forage Cree";
+        } else {
+            throw new RuntimeException("Type de devis inconnu");
+        }
+
+        Status status = statusRepo.findByLibelle(libelleStatus);
 
         DemandeStatus ds = new DemandeStatus();
         ds.setDemande(demande);
