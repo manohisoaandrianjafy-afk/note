@@ -74,6 +74,8 @@ CREATE TABLE t_demande_status (
         FOREIGN KEY (id_status)
         REFERENCES t_status(id)
 );
+ALTER TABLE t_demande_status ADD COLUMN observation VARCHAR(100)
+
 
 CREATE TABLE t_typedevis (
     id SERIAL PRIMARY KEY,
@@ -108,3 +110,7 @@ CREATE TABLE t_details_devis (
         REFERENCES t_devis(id)
         ON DELETE CASCADE
 );
+
+
+SELECT SUM(montant_total) FROM t_devis WHERE id_type =1;
+SELECT SUM(montant_total) FROM t_devis WHERE id_type =2;

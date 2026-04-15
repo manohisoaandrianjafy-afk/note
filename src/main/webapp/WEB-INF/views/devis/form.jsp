@@ -14,7 +14,7 @@
         color: #222;
     }
 
-    form {
+    form { 
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -91,10 +91,12 @@
     <br><br>
 
     <div id="resultat" style="display:none;">
-        <p><strong>Client :</strong> <span id="client"></span>,
+        <p>
+        <strong>Client :</strong> <span id="client"></span>,
         <strong>Date :</strong> <span id="dateDemande"></span>,
         <strong>Lieu :</strong> <span id="lieu"></span>,
-        <strong>District :</strong> <span id="district"></span></p>
+        <strong>District :</strong> <span id="district"></span>
+        </p>
     </div>
 
     Type de devis :
@@ -182,14 +184,37 @@ function ajouterLigne() {
     calculerTotalGeneral();
 }
 
+// document.addEventListener("input", function(e) {
+//     if (e.target.classList.contains("prix") || e.target.classList.contains("quantite")) {
+//         let row = e.target.parentElement;
+//         let prix = row.querySelector(".prix").value;
+//         if(prix >= 1000000){
+//             prix = prix -((prix* 10)/100)
+//         }
+//         let quantite = row.querySelector(".quantite").value;
+//         let montant = row.querySelector(".montant");
+
+//         montant.value = (prix * quantite) || 0;
+//         calculerTotalGeneral();
+//     }
+// });
+
 document.addEventListener("input", function(e) {
     if (e.target.classList.contains("prix") || e.target.classList.contains("quantite")) {
         let row = e.target.parentElement;
-        let prix = row.querySelector(".prix").value;
-        let quantite = row.querySelector(".quantite").value;
-        let montant = row.querySelector(".montant");
 
-        montant.value = (prix * quantite) || 0;
+        let prixInput = row.querySelector(".prix");
+        let prix = parseFloat(prixInput.value) || 0;
+        let quantite = parseFloat(row.querySelector(".quantite").value) || 0;
+
+        if (prix >= 1000000) {
+            prix = prix - ((prix * 10) / 100);
+            prixInput.value = prix; 
+        }
+
+        let montant = row.querySelector(".montant");
+        montant.value = prix * quantite;
+
         calculerTotalGeneral();
     }
 });

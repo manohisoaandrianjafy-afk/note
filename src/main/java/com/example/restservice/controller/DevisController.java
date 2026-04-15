@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/devis")
@@ -32,9 +33,11 @@ public class DevisController {
         return "devis/list";
     }
 
-    @GetMapping("/list-data")
-    @ResponseBody
-    public List<DevisListDTO> getListData() {
-        return devisService.getAllDevisAvecStatus();
-    }
+   @GetMapping("/chiffre-affaire")
+    public String affaire(Model model) {
+    double chiffre = devisService.chiffreAffaire();
+    System.out.println("chiffre = " + chiffre);
+    model.addAttribute("chiffre", chiffre);
+    return "devis/chiffreAffaire";
+}
 }

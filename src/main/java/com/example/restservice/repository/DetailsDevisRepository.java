@@ -1,7 +1,10 @@
 package com.example.restservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.example.restservice.entity.DetailsDevis;
 
-public interface DetailsDevisRepository extends JpaRepository<DetailsDevis, Integer> {}
+public interface DetailsDevisRepository extends JpaRepository<DetailsDevis, Integer> {
+
+}

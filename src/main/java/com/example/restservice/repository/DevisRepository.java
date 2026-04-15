@@ -19,5 +19,10 @@ public interface DevisRepository extends JpaRepository<Devis, Integer> {
         JOIN FETCH d.typeDevis
     """)
     List<Devis> findAllWithDemandeAndClient();
+ 
+    // @Query("SELECT SUM(prix * quantite) FROM t_details_devis")
+    // double getChiffreAffaire();
 
-}
+     @Query("SELECT SUM(d.montantTotal) FROM Devis d")
+        Double getChiffreAffaire();
+ }

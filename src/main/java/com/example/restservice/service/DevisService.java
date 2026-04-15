@@ -5,6 +5,9 @@ import com.example.restservice.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,27 +88,7 @@ public class DevisService {
         return devisRepo.findAllWithDetails();
     }
 
-public List<DevisListDTO> getAllDevisAvecStatus() {
-
-    List<Devis> devisList = devisRepo.findAllWithDemandeAndClient();
-    List<DevisListDTO> result = new ArrayList<>();
-
-    for (Devis d : devisList) {
-
-        // récupérer dernier status
-        DemandeStatus ds = dsRepo.findTopByDemandeOrderByDateStatusDesc(d.getDemande());
-
-        String status = (ds != null) ? ds.getStatus().getLibelle() : "Aucun";
-
-        result.add(new DevisListDTO(
-                d.getId(),
-                d.getDemande().getClient().getNom(),
-                status,
-                d.getMontantTotal()
-        ));
+    public double chiffreAffaire() {
+        return devisRepo.getChiffreAffaire();
     }
-
-    return result;
-}
-    
 }
