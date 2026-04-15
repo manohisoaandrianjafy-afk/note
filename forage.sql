@@ -51,7 +51,8 @@ CREATE TABLE t_status (
 );
 INSERT INTO t_status (libelle) VALUES
 ('Cree'),
-('Devis Cree'),
+('Devis Etude Cree'),
+('Devis Forage Cree'),
 ('Devis Etude accepté'),
 ('Devis Etude refusé'),
 ('Devis Forage accepté'),
@@ -73,12 +74,16 @@ CREATE TABLE t_demande_status (
         FOREIGN KEY (id_status)
         REFERENCES t_status(id)
 );
+ALTER TABLE t_demande_status ADD COLUMN observation VARCHAR(100)
+
 
 CREATE TABLE t_typedevis (
     id SERIAL PRIMARY KEY,
     libelle VARCHAR(100) NOT NULL
 );
--- exemples : étude, forage
+INSERT INTO t_typedevis (libelle) VALUES
+('Etude'),
+('Forage');
 
 CREATE TABLE t_devis (
     id SERIAL PRIMARY KEY,
@@ -99,9 +104,13 @@ CREATE TABLE t_details_devis (
     id_devis INT NOT NULL,
     libelle VARCHAR(150) NOT NULL,
     prix NUMERIC(12,2) NOT NULL,
+    quantite NUMERIC(12,2) NOT NULL,
     CONSTRAINT fk_details_devis
         FOREIGN KEY (id_devis)
         REFERENCES t_devis(id)
         ON DELETE CASCADE
 );
 
+
+SELECT SUM(montant_total) FROM t_devis WHERE id_type =1;
+SELECT SUM(montant_total) FROM t_devis WHERE id_type =2;

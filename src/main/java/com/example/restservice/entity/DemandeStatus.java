@@ -21,7 +21,10 @@ public class DemandeStatus {
     @JoinColumn(name = "id_status")
     private Status status;
 
-    private LocalDateTime dateStatus; // plus @Temporal
+    // private LocalDateTime dateStatus;
+
+    @Column(name = "date_status", insertable = false, updatable = false)
+    private LocalDateTime dateStatus;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
