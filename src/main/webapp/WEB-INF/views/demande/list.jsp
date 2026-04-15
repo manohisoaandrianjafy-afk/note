@@ -27,6 +27,9 @@
                 <a href="/demandeClient/edit/${d.id}">Modifier</a>
                 <a href="/demandeClient/delete/${d.id}">Supprimer</a>
                 <a href="/demandeClient/editStatus/${d.id}">Modifier Status de la demande</a>
+                <a href="/demandeClient/historique/${d.client.id}">
+                    Regarder historique de la demande
+                </a>
             </td>
         </tr>
     </c:forEach>

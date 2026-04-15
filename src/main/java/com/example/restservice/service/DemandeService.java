@@ -80,25 +80,38 @@ public class DemandeService {
     // }
 
     public List<Demande> getAllWithStatus() {
-    List<Demande> demandes = repo.findAll();
+        List<Demande> demandes = repo.findAll();
 
-    for (Demande d : demandes) {
-        DemandeStatus ds = getLastDemandeStatus(d.getId());
+        for (Demande d : demandes) {
+            DemandeStatus ds = getLastDemandeStatus(d.getId());
 
-        if (ds != null) {
-            d.setLastStatus(ds.getStatus().getLibelle());
-            if (ds.getObservation() == null || ds.getObservation().trim().isEmpty()) {
-                d.setLastObservation("Pas d'observation");
+            if (ds != null) {
+                d.setLastStatus(ds.getStatus().getLibelle());
+                if (ds.getObservation() == null || ds.getObservation().trim().isEmpty()) {
+                    d.setLastObservation("Pas d'observation");
+                } else {
+                    d.setLastObservation(ds.getObservation());
+                }
+
             } else {
-                d.setLastObservation(ds.getObservation());
+                d.setLastStatus("Aucun status");
+                d.setLastObservation("Pas d'observation");
             }
-
-        } else {
-            d.setLastStatus("Aucun status");
-            d.setLastObservation("Pas d'observation");
         }
+
+        return demandes;
     }
 
-    return demandes;
-}
+    public List<Demande> getDemandesByClient(Integer idClient) {
+        List<Demande> demandes = repo.findByClientId(idClient);
+
+        for (Demande d : demandes) {
+            List<DemandeStatus> statuts = demandeStatusRepo
+                    .findByDemandeOrderByDateDesc(d.getId());
+
+            d.setStatuts(statuts); 
+        }
+
+        return demandes;
+    }
 }

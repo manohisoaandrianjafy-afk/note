@@ -78,11 +78,21 @@ public class DemandeController {
 
     @PostMapping("/saveStatus")
     public String saveStatus(@RequestParam Integer idDemande,
-                         @RequestParam Integer idStatus,
-                         @RequestParam String observation) {
+            @RequestParam Integer idStatus,
+            @RequestParam String observation) {
 
-    demandeStatusService.addStatus(idDemande, idStatus, observation);
+        demandeStatusService.addStatus(idDemande, idStatus, observation);
 
-    return "redirect:/demandeClient";
-}
+        return "redirect:/demandeClient";
+    }
+
+    @GetMapping("/historique/{idClient}")
+    public String historique(@PathVariable Integer idClient, Model model) {
+
+        List<Demande> demandes = service.getDemandesByClient(idClient);
+
+        model.addAttribute("demandes", demandes);
+
+        return "demande/historique";
+    }
 }

@@ -33,6 +33,17 @@ public class Demande {
     @Transient
     private String lastObservation;
 
+    @Transient
+private List<DemandeStatus> statuts;
+
+public List<DemandeStatus> getStatuts() {
+    return statuts;
+}
+
+public void setStatuts(List<DemandeStatus> statuts) {
+    this.statuts = statuts;
+}
+
     public String getLastObservation() {
         return lastObservation;
     }
