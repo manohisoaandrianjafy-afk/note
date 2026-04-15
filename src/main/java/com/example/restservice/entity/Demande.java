@@ -2,11 +2,12 @@ package com.example.restservice.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Entity
 @Table(name = "t_demande")
 public class Demande {
@@ -20,27 +21,71 @@ public class Demande {
     private Client client;
 
     @Temporal(TemporalType.DATE)
-@DateTimeFormat(pattern = "yyyy-MM-dd")
-private Date dateDemande;
-
-   
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateDemande;
 
     private String lieu;
     private String district;
 
-    
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    @Transient
+    private String lastStatus;
 
-    public Client getClient() { return client; }
-    public void setClient(Client client) { this.client = client; }
+    @Transient
+    private String lastObservation;
 
-    public Date getDateDemande() { return dateDemande; }
-    public void setDateDemande(Date dateDemande) { this.dateDemande = dateDemande; }
+    public String getLastObservation() {
+        return lastObservation;
+    }
 
-    public String getLieu() { return lieu; }
-    public void setLieu(String lieu) { this.lieu = lieu; }
+    public void setLastObservation(String lastObservation) {
+        this.lastObservation = lastObservation;
+    }
 
-    public String getDistrict() { return district; }
-    public void setDistrict(String district) { this.district = district; }
+    public String getLastStatus() {
+        return lastStatus;
+    }
+
+    public void setLastStatus(String lastStatus) {
+        this.lastStatus = lastStatus;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Date getDateDemande() {
+        return dateDemande;
+    }
+
+    public void setDateDemande(Date dateDemande) {
+        this.dateDemande = dateDemande;
+    }
+
+    public String getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 }

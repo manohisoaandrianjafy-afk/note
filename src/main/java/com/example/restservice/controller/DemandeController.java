@@ -1,5 +1,9 @@
 package com.example.restservice.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.restservice.entity.Demande;
 import com.example.restservice.service.DemandeService;
+import com.example.restservice.service.StatusService;
 import com.example.restservice.service.ClientService;
 
 @Controller
@@ -19,14 +24,21 @@ public class DemandeController {
     @Autowired
     private ClientService clientService;
 
-   
+    @Autowired
+    private StatusService statusService;
+
+    // @GetMapping
+    // public String list(Model model) {
+    // model.addAttribute("demandes", service.getAllWithStatus());
+    // return "demande/list";
+    // }
+
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("demandes", service.getAll());
+        model.addAttribute("demandes", service.getAllWithStatus());
         return "demande/list";
     }
 
-    
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("demande", new Demande());
@@ -34,14 +46,12 @@ public class DemandeController {
         return "demande/form";
     }
 
-    
     @PostMapping("/save")
     public String save(@ModelAttribute Demande demande) {
         service.save(demande);
         return "redirect:/demandeClient";
     }
 
-   
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         model.addAttribute("demande", service.getById(id));
@@ -49,10 +59,16 @@ public class DemandeController {
         return "demande/form";
     }
 
-  
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         service.delete(id);
         return "redirect:/demandeClient";
+    }
+
+    @GetMapping("/editStatus/{id}")
+    public String editStatus(@PathVariable Integer id, Model model) {
+        model.addAttribute("demande", service.getById(id));
+        model.addAttribute("statuses", statusService.getAll());
+        return "demande/edit_status";
     }
 }

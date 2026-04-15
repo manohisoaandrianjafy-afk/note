@@ -10,6 +10,8 @@
         <th>Date</th>
         <th>Lieu</th>
         <th>District</th>
+        <th>Status</th>
+        <th>Observation</th>
         <th>Action</th>
     </tr>
 
@@ -19,9 +21,12 @@
             <td>${d.dateDemande}</td>
             <td>${d.lieu}</td>
             <td>${d.district}</td>
+            <td>${d.lastStatus}</td>
+            <td>${d.lastObservation}</td>
             <td>
                 <a href="/demandeClient/edit/${d.id}">Modifier</a>
                 <a href="/demandeClient/delete/${d.id}">Supprimer</a>
+                <a href="/demandeClient/editStatus/${d.id}">Modifier Status de la demande</a>
             </td>
         </tr>
     </c:forEach>

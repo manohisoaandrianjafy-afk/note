@@ -23,7 +23,7 @@ public class DemandeService {
     private StatusRepository statusRepo;
 
     @Autowired
-     private DemandeStatusRepository demandeStatusRepo;
+    private DemandeStatusRepository demandeStatusRepo;
 
     public List<Demande> getAll() {
         return repo.findAll();
@@ -34,7 +34,7 @@ public class DemandeService {
     }
 
     // public void save(Demande demande) {
-    //     repo.save(demande);
+    // repo.save(demande);
     // }
 
     public void save(Demande demande) {
@@ -50,4 +50,55 @@ public class DemandeService {
     public void delete(Integer id) {
         repo.deleteById(id);
     }
+
+    public String getLastStatus(Integer idDemande) {
+        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByDateDesc(idDemande);
+        if (list.isEmpty())
+            return "Aucun status";
+        return list.get(0).getStatus().getLibelle();
+    }
+
+    public DemandeStatus getLastDemandeStatus(Integer idDemande) {
+        List<DemandeStatus> list = demandeStatusRepo
+                .findByDemandeOrderByDateDesc(idDemande);
+
+        if (list.isEmpty())
+            return null;
+
+        return list.get(0);
+    }
+
+    // public List<Demande> getAllWithStatus() {
+    // List<Demande> demandes = repo.findAll();
+
+    // for (Demande d : demandes) {
+    // String status = getLastStatus(d.getId());
+    // d.setLastStatus(status);
+    // }
+
+    // return demandes;
+    // }
+
+    public List<Demande> getAllWithStatus() {
+    List<Demande> demandes = repo.findAll();
+
+    for (Demande d : demandes) {
+        DemandeStatus ds = getLastDemandeStatus(d.getId());
+
+        if (ds != null) {
+            d.setLastStatus(ds.getStatus().getLibelle());
+            if (ds.getObservation() == null || ds.getObservation().trim().isEmpty()) {
+                d.setLastObservation("Pas d'observation");
+            } else {
+                d.setLastObservation(ds.getObservation());
+            }
+
+        } else {
+            d.setLastStatus("Aucun status");
+            d.setLastObservation("Pas d'observation");
+        }
+    }
+
+    return demandes;
+}
 }
