@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.restservice.entity.Demande;
 import com.example.restservice.service.DemandeService;
+import com.example.restservice.service.DemandeStatusService;
 import com.example.restservice.service.StatusService;
 import com.example.restservice.service.ClientService;
 
@@ -26,6 +27,9 @@ public class DemandeController {
 
     @Autowired
     private StatusService statusService;
+
+    @Autowired
+    private DemandeStatusService demandeStatusService;
 
     // @GetMapping
     // public String list(Model model) {
@@ -71,4 +75,14 @@ public class DemandeController {
         model.addAttribute("statuses", statusService.getAll());
         return "demande/edit_status";
     }
+
+    @PostMapping("/saveStatus")
+    public String saveStatus(@RequestParam Integer idDemande,
+                         @RequestParam Integer idStatus,
+                         @RequestParam String observation) {
+
+    demandeStatusService.addStatus(idDemande, idStatus, observation);
+
+    return "redirect:/demandeClient";
+}
 }
