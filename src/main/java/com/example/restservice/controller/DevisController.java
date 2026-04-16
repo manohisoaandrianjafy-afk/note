@@ -33,11 +33,17 @@ public class DevisController {
         return "devis/list";
     }
 
-   @GetMapping("/chiffre-affaire")
+    @GetMapping("/chiffre-affaire")
     public String affaire(Model model) {
-    double chiffre = devisService.chiffreAffaire();
-    System.out.println("chiffre = " + chiffre);
-    model.addAttribute("chiffre", chiffre);
-    return "devis/chiffreAffaire";
-}
+        double chiffre = devisService.chiffreAffaire();
+        model.addAttribute("chiffre", chiffre);
+        return "devis/chiffreAffaire";
+    }
+
+    @GetMapping("/{id}")
+    public String details(@PathVariable int id, Model model) {
+        Devis devis = devisService.getById(id);
+        model.addAttribute("devis", devis);
+        return "devis/details";
+    }
 }

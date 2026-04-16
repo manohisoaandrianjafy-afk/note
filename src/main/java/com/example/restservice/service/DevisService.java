@@ -91,4 +91,8 @@ public class DevisService {
     public double chiffreAffaire() {
         return devisRepo.getChiffreAffaire();
     }
+
+    public Devis getById(int id) {
+        return devisRepo.findByIdWithDetails(id);
+    }
 }
