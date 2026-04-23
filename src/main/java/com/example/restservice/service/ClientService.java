@@ -27,4 +27,8 @@ public class ClientService {
     public void delete(Integer id) {
         repo.deleteById(id);
     }
+
+    public Long getSommeClient() {
+        return repo.getSommeClient();
+    }
 }

@@ -2,7 +2,7 @@ Liste demande du client
 http://localhost:8080/demandeClient
 
 liste des devis
-http://localhost:8080/devis
+http://localhost:8080/devis/list
 
 Chiffre affaire
 http://localhost:8080/devis/chiffre-affaire

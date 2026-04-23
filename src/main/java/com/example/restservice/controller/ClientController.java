@@ -15,6 +15,12 @@ public class ClientController {
     @Autowired
     private ClientService service;
 
+    private final ClientService clientService;
+
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
     @GetMapping
     public String list(Model model) {
         model.addAttribute("clients", service.getAll());
@@ -44,5 +50,11 @@ public class ClientController {
     public String delete(@PathVariable Integer id) {
         service.delete(id);
         return "redirect:/client";
+    }
+
+    @GetMapping("/list")
+    public String listClients(Model model) {
+        model.addAttribute("clients", clientService.getAll());
+        return "client/list";
     }
 }

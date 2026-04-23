@@ -1,101 +1,202 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Historique des demandes</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Historique des demandes</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f7fa;
-            margin: 20px;
-            color: #333;
-        }
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            
+            :root {
+                --primary:    #5B6EF5;
+                --primary-lt: #EEF0FE;
+                --bg:         #F4F6FB;
+                --surface:    #FFFFFF;
+                --border:     #E8EAF0;
+                --text:       #1A1D2E;
+                --muted:      #8B8FA8;
+                --radius:     14px;
+                --shadow:     0 2px 14px rgba(0,0,0,.06);
+            }
+            
+            body {
+                font-family: 'DM Sans', sans-serif;
+                background: var(--bg);
+                color: var(--text);
+            }
+            
+            .main {
+                padding: 32px;
+            }
+            
+            /* TOPBAR */
+            .topbar {
+                margin-bottom: 28px;
+            }
+            
+            .topbar h1 {
+                font-size: 22px;
+                font-weight: 700;
+            }
+            
+            /* EMPTY STATE */
+            .empty {
+                color: var(--muted);
+                font-style: italic;
+                background: var(--surface);
+                padding: 14px;
+                border-radius: var(--radius);
+                border: 1px solid var(--border);
+            }
+            
+            /* DEMANDE CARD */
+            .demande-card {
+                margin-bottom: 20px;
+            }
+            
+            .demande-header {
+                background: var(--surface);
+                padding: 14px 18px;
+                border-radius: var(--radius) var(--radius) 0 0;
+                border: 1px solid var(--border);
+                border-bottom: none;
+                font-weight: 600;
+            }
+            
+            /* TABLE */
+            .table-card {
+                background: var(--surface);
+                border-radius: 0 0 var(--radius) var(--radius);
+                border: 1px solid var(--border);
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            thead {
+                background: #F8F9FC;
+            }
+            
+            th {
+                padding: 13px 18px;
+                text-align: left;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--muted);
+                text-transform: uppercase;
+            }
+            
+            td {
+                padding: 14px 18px;
+                font-size: 14px;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            tr:last-child td {
+                border-bottom: none;
+            }
+            
+            tbody tr:hover {
+                background: #F8F9FF;
+            }
+            
+            /* STATUS PILL */
+            .pill {
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                background: var(--primary-lt);
+                color: var(--primary);
+            }
+            
+        </style>
+    </head>
 
-        h3 {
-            color: #34495e;
-            margin-top: 25px;
-            background: white;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-        }
+    <body>
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
+        <main class="main">
 
-        th {
-            background-color:  #121313;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
+            
+            <div class="topbar">
+                <h1>Historique des demandes</h1>
+            </div>
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
+            <c:choose>
 
-        tr:hover {
-            background-color: #f1f9ff;
-        }
+                <c:when test="${empty demandes}">
+                    <p class="empty">Pas encore de demande effectuée</p>
+                </c:when>
 
-        .empty {
-            color: #7f8c8d;
-            font-style: italic;
-        }
-    </style>
-</head>
+                <c:otherwise>
 
-<body>
+                    <c:forEach items="${demandes}" var="d">
 
-<h2>Historique des demandes</h2>
+                        <div class="demande-card">
 
-<c:forEach items="${demandes}" var="d">
+                            
+                            <div class="demande-header">
+                                Demande du ${d.dateDemande} — ${d.lieu}
+                            </div>
 
-    <h3>
-        Demande du ${d.dateDemande} - ${d.lieu}
-    </h3>
+                            
+                            <div class="table-card">
+                                <table>
 
-    <table>
-        <tr>
-            <th>Status</th>
-            <th>Observation</th>
-            <th>Date</th>
-        </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Statut</th>
+                                            <th>Observation</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
 
-        <c:forEach items="${d.statuts}" var="s">
-            <tr>
-                <td>${s.status.libelle}</td>
-                <td>
-                    <c:choose>
-                        <c:when test="${empty s.observation}">
-                            <span class="empty">Pas d'observation</span>
-                        </c:when>
-                        <c:otherwise>
-                            ${s.observation}
-                        </c:otherwise>
-                    </c:choose>
-                </td>
-                <td>${s.dateStatus}</td>
-            </tr>
-        </c:forEach>
-    </table>
+                                    <tbody>
+                                        <c:forEach items="${d.statuts}" var="s">
+                                            <tr>
 
-</c:forEach>
+                                                <td>
+                                                    <span class="pill">${s.status.libelle}</span>
+                                                </td>
 
-</body>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${empty s.observation}">
+                                                            <span class="empty">Pas d'observation</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${s.observation}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+
+                                                <td>${s.dateStatus}</td>
+
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </c:forEach>
+
+                </c:otherwise>
+
+            </c:choose>
+
+        </main>
+
+    </body>
 </html>

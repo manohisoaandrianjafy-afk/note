@@ -5,9 +5,6 @@ import com.example.restservice.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,4 +92,21 @@ public class DevisService {
     public Devis getById(int id) {
         return devisRepo.findByIdWithDetails(id);
     }
+
+    public Long countByType(String type) {
+        return devisRepo.countByType(type);
+    }
+
+    public Long countTotal() {
+        return devisRepo.countTotal();
+    }
+
+    public List<DevisDetailDTO> getAllDetails() {
+        return devisRepo.findAllDetails();
+    }
+
+    public List<Devis> getByClient(Integer idClient) {
+    return devisRepo.findByClientId(idClient);
+}
+
 }

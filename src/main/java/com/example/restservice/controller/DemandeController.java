@@ -1,8 +1,6 @@
 package com.example.restservice.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,12 +28,6 @@ public class DemandeController {
 
     @Autowired
     private DemandeStatusService demandeStatusService;
-
-    // @GetMapping
-    // public String list(Model model) {
-    // model.addAttribute("demandes", service.getAllWithStatus());
-    // return "demande/list";
-    // }
 
     @GetMapping
     public String list(Model model) {
@@ -88,11 +80,30 @@ public class DemandeController {
 
     @GetMapping("/historique/{idClient}")
     public String historique(@PathVariable Integer idClient, Model model) {
-
         List<Demande> demandes = service.getDemandesByClient(idClient);
-
         model.addAttribute("demandes", demandes);
-
         return "demande/historique";
     }
+
+//     @GetMapping("/historique/{idClient}")
+// public String historique(@PathVariable Integer idClient, Model model) {
+//     List<Demande> demandes = service.getDemandesByClient(idClient);
+//     model.addAttribute("demandes", demandes);
+//     return "demande/historique";
+// }
+
+    @GetMapping("/editObservation/{id}")
+    public String editObservation(@PathVariable Integer id, Model model) {
+        Demande demande = service.getById(id);
+        model.addAttribute("demande", demande);
+        return "demande/edit_observation_date";
+    }
+
+    @PostMapping("/updateObservation")
+    public String updateObservation(@RequestParam Integer idDemande, @RequestParam String observation,
+            @RequestParam String date) {
+        demandeStatusService.updateObservationAndDate(idDemande, observation, date);
+        return "redirect:/demandeClient";
+    }
+
 }

@@ -12,6 +12,14 @@ import com.example.restservice.entity.DemandeStatus;
 public interface DemandeStatusRepository extends JpaRepository<DemandeStatus, Integer> {
      DemandeStatus findTopByDemandeOrderByDateStatusDesc(Demande demande);
 
-     @Query("SELECT ds FROM DemandeStatus ds WHERE ds.demande.id = :idDemande ORDER BY ds.dateStatus DESC")
-     List<DemandeStatus> findByDemandeOrderByDateDesc(@Param("idDemande") Integer idDemande);
+     @Query("SELECT ds FROM DemandeStatus ds WHERE ds.demande.id = :idDemande ORDER BY ds.id DESC")
+     List<DemandeStatus> findByDemandeOrderByIdDesc(@Param("idDemande") Integer idDemande);
+
+     @Query("""
+                   SELECT s.libelle, COUNT(ds)
+                   FROM DemandeStatus ds
+                   JOIN ds.status s
+                   GROUP BY s.libelle
+               """)
+     List<Object[]> countByStatus();
 }

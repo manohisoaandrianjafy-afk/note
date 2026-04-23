@@ -33,10 +33,6 @@ public class DemandeService {
         return repo.findById(id).orElse(null);
     }
 
-    // public void save(Demande demande) {
-    // repo.save(demande);
-    // }
-
     public void save(Demande demande) {
         Demande savedDemande = repo.save(demande);
         Status status = statusRepo.findByLibelle("Cree");
@@ -52,7 +48,7 @@ public class DemandeService {
     }
 
     public String getLastStatus(Integer idDemande) {
-        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByDateDesc(idDemande);
+        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByIdDesc(idDemande);
         if (list.isEmpty())
             return "Aucun status";
         return list.get(0).getStatus().getLibelle();
@@ -60,24 +56,13 @@ public class DemandeService {
 
     public DemandeStatus getLastDemandeStatus(Integer idDemande) {
         List<DemandeStatus> list = demandeStatusRepo
-                .findByDemandeOrderByDateDesc(idDemande);
+                .findByDemandeOrderByIdDesc(idDemande);
 
         if (list.isEmpty())
             return null;
 
         return list.get(0);
     }
-
-    // public List<Demande> getAllWithStatus() {
-    // List<Demande> demandes = repo.findAll();
-
-    // for (Demande d : demandes) {
-    // String status = getLastStatus(d.getId());
-    // d.setLastStatus(status);
-    // }
-
-    // return demandes;
-    // }
 
     public List<Demande> getAllWithStatus() {
         List<Demande> demandes = repo.findAll();
@@ -107,11 +92,16 @@ public class DemandeService {
 
         for (Demande d : demandes) {
             List<DemandeStatus> statuts = demandeStatusRepo
-                    .findByDemandeOrderByDateDesc(d.getId());
+                    .findByDemandeOrderByIdDesc(d.getId());
 
-            d.setStatuts(statuts); 
+            d.setStatuts(statuts);
         }
 
         return demandes;
     }
+
+    public List<Demande> getByStatus(String status) {
+        return repo.findByStatus(status);
+    }
+
 }

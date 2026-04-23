@@ -116,6 +116,7 @@
         <th>Status</th>
         <th>Observation</th>
         <th>Action</th>
+         <th>Action</th>
     </tr>
 
     <c:forEach items="${demandes}" var="d">
@@ -142,11 +143,18 @@
                 <a href="/demandeClient/historique/${d.client.id}" class="history">
                     Historique
                 </a>
-
+                 <br>
+                <!-- <a href="/demandeClient/editObservation/${d.id}" class="observation">
+                    Modifier Observation et/ou date
+                </a> -->
+                 <a href="/demandeClient/editObservation/${d.client.id}" class="edit">
+                    Modifier Observation et/ou date
+                </a>
             </td>
+          
         </tr>
     </c:forEach>
 </table>
 
 </body>
-</html>
+</html> 
