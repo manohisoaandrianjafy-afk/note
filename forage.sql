@@ -172,7 +172,7 @@ CREATE TABLE t_duree_changement_statut (
     id SERIAL PRIMARY KEY,
     id_devis_un INT NOT NULL,
     id_devis_deux INT NOT NULL,
-    duree TIME,
+    duree INT,
     CONSTRAINT fk_dcs_un FOREIGN KEY (id_devis_un) REFERENCES t_demande_status (id) ON DELETE CASCADE,
     CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux) REFERENCES t_demande_status (id) ON DELETE CASCADE
 );

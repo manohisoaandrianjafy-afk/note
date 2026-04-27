@@ -13,9 +13,14 @@ import com.example.restservice.entity.Demande;
 import com.example.restservice.entity.DemandeStatus;
 import com.example.restservice.entity.DureeStatusDTO;
 import com.example.restservice.entity.Status;
+import com.example.restservice.entity.T_DureeChangementStatut;
 import com.example.restservice.repository.DemandeRepository;
 import com.example.restservice.repository.DemandeStatusRepository;
+import com.example.restservice.repository.DureeRepository;
 import com.example.restservice.repository.StatusRepository;
+
+import java.sql.Time;
+import java.time.Duration;
 
 @Service
 public class DemandeStatusService {
@@ -28,7 +33,10 @@ public class DemandeStatusService {
     @Autowired
     private DemandeStatusRepository demandeStatusRepo;
 
-    public void addStatus(Integer idDemande, Integer idStatus, String observation) {
+    @Autowired
+    private DureeRepository dureeRepo;
+
+    public void addStatus(Integer idDemande, Integer idStatus, String observation, String dateStatus) {
 
         Demande demande = demandeRepo.findById(idDemande).orElse(null);
         Status status = statusRepo.findById(idStatus).orElse(null);
@@ -38,7 +46,16 @@ public class DemandeStatusService {
         ds.setStatus(status);
         ds.setObservation(observation);
 
+        // conversion datetime-local -> LocalDateTime
+        if (dateStatus != null && !dateStatus.isEmpty()) {
+            ds.setDateStatus(LocalDateTime.parse(dateStatus));
+        } else {
+            ds.setDateStatus(LocalDateTime.now());
+        }
+
         demandeStatusRepo.save(ds);
+
+        saveDerniereDuree(idDemande);
     }
 
     public void updateObservationAndDate(Integer idDemande, String observation, String date) {
@@ -94,5 +111,28 @@ public class DemandeStatusService {
         }
 
         return result;
+    }
+
+    public void saveDerniereDuree(Integer idDemande) {
+
+        List<DemandeStatus> list = demandeStatusRepo
+                .findByDemandeOrderByDateStatusAsc(idDemande);
+        if (list.size() < 2)
+            return;
+
+        DemandeStatus avantDernier = list.get(list.size() - 2);
+        DemandeStatus dernier = list.get(list.size() - 1);
+
+        Duration duration = Duration.between(
+                avantDernier.getDateStatus(),
+                dernier.getDateStatus());
+        long minutesTotal = duration.toMinutes();
+
+        T_DureeChangementStatut d = new T_DureeChangementStatut();
+        d.setIdDevisUn(avantDernier.getId());
+        d.setIdDevisDeux(dernier.getId());
+        d.setDuree(minutesTotal);
+
+        dureeRepo.save(d);
     }
 }

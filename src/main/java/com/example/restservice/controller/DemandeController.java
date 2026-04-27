@@ -71,9 +71,10 @@ public class DemandeController {
     @PostMapping("/saveStatus")
     public String saveStatus(@RequestParam Integer idDemande,
             @RequestParam Integer idStatus,
-            @RequestParam String observation) {
+            @RequestParam String observation,
+            @RequestParam String dateStatus) {
 
-        demandeStatusService.addStatus(idDemande, idStatus, observation);
+        demandeStatusService.addStatus(idDemande, idStatus, observation, dateStatus);
 
         return "redirect:/demandeClient";
     }
