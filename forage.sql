@@ -168,6 +168,7 @@ CREATE TABLE t_details_devis (
     CONSTRAINT fk_details_devis FOREIGN KEY (id_devis) REFERENCES t_devis (id) ON DELETE CASCADE
 );
 
+-----Format 24h
 CREATE TABLE t_duree_changement_statut (
     id SERIAL PRIMARY KEY,
     id_devis_un INT NOT NULL,
@@ -176,6 +177,29 @@ CREATE TABLE t_duree_changement_statut (
     CONSTRAINT fk_dcs_un FOREIGN KEY (id_devis_un) REFERENCES t_demande_status (id) ON DELETE CASCADE,
     CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux) REFERENCES t_demande_status (id) ON DELETE CASCADE
 );
+
+
+-------Format avec heure determine
+CREATE TABLE t_heure_fixe(
+    id SERIAL PRIMARY KEY,
+    heure_debut TIME,
+    heure_fin TIME,
+    heure_pause TIME
+);
+INSERT INTO t_heure_fixe (heure_debut, heure_fin, heure_pause)
+VALUES ('08:00:00', '17:00:00', '02:00:00');
+
+CREATE TABLE t_duree_changement_statut_heure_fixe (
+    id SERIAL PRIMARY KEY,
+    id_devis_un INT NOT NULL,
+    id_devis_deux INT NOT NULL,
+    duree INT,
+    CONSTRAINT fk_dcs_un FOREIGN KEY (id_devis_un)
+        REFERENCES t_demande_status (id) ON DELETE CASCADE,
+    CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux)
+        REFERENCES t_demande_status (id) ON DELETE CASCADE
+);
+
 
 SELECT SUM(montant_total) FROM t_devis WHERE id_type = 1;
 

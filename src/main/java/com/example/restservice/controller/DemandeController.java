@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.restservice.entity.Demande;
+import com.example.restservice.repository.DureeHeureFixeRepository;
 import com.example.restservice.service.DemandeService;
 import com.example.restservice.service.DemandeStatusService;
 import com.example.restservice.service.StatusService;
@@ -28,6 +29,9 @@ public class DemandeController {
 
     @Autowired
     private DemandeStatusService demandeStatusService;
+   
+    @Autowired
+    private DureeHeureFixeRepository dureeHeureFixeRepo;
 
     @GetMapping
     public String list(Model model) {
@@ -114,5 +118,14 @@ public class DemandeController {
                 demandeStatusService.getDureesEntreStatus(idDemande));
 
         return "demande/duree_status";
+    }
+
+    @GetMapping("/dureeHeureFixe/{idDemande}")
+    public String dureeHeureFixe(@PathVariable Integer idDemande, Model model) {
+
+        model.addAttribute("durees",
+                demandeStatusService.getDureeHeureFixeList(idDemande));
+
+        return "demande/duree_heure_fixe";
     }
 }

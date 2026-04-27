@@ -157,6 +157,9 @@
                         <a href="/demandeClient/duree/${d.id}" class="history">
                             Voir durée entre status
                         </a>
+                        <a href="/demandeClient/dureeHeureFixe/${d.id}" class="status">
+                            Durée heure fixe
+                        </a>
                     </td>
 
                 </tr>
