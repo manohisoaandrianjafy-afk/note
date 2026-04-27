@@ -22,4 +22,11 @@ public interface DemandeStatusRepository extends JpaRepository<DemandeStatus, In
                    GROUP BY s.libelle
                """)
      List<Object[]> countByStatus();
+
+     @Query("""
+                   SELECT ds FROM DemandeStatus ds
+                   WHERE ds.demande.id = :idDemande
+                   ORDER BY ds.dateStatus ASC
+               """)
+     List<DemandeStatus> findByDemandeOrderByDateStatusAsc(@Param("idDemande") Integer idDemande);
 }

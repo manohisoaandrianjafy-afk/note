@@ -1,6 +1,8 @@
 package com.example.restservice.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -98,5 +100,14 @@ public void setStatuts(List<DemandeStatus> statuts) {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+      private LocalDateTime lastDateStatus;
+
+    public LocalDateTime getLastDateStatus() {
+        return lastDateStatus;
+    }
+
+    public void setLastDateStatus(LocalDateTime lastDateStatus) {
+        this.lastDateStatus = lastDateStatus;
     }
 }

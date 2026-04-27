@@ -78,7 +78,7 @@
     <input type="text" name="observation" />
 
     <label>Date :</label>
-    <input type="date" name="date" />
+    <input type="datetime-local" name="date" />
 
 
     <button type="submit">Valider</button>

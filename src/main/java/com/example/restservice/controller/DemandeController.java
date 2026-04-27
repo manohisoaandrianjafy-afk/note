@@ -85,12 +85,12 @@ public class DemandeController {
         return "demande/historique";
     }
 
-//     @GetMapping("/historique/{idClient}")
-// public String historique(@PathVariable Integer idClient, Model model) {
-//     List<Demande> demandes = service.getDemandesByClient(idClient);
-//     model.addAttribute("demandes", demandes);
-//     return "demande/historique";
-// }
+    // @GetMapping("/historique/{idClient}")
+    // public String historique(@PathVariable Integer idClient, Model model) {
+    // List<Demande> demandes = service.getDemandesByClient(idClient);
+    // model.addAttribute("demandes", demandes);
+    // return "demande/historique";
+    // }
 
     @GetMapping("/editObservation/{id}")
     public String editObservation(@PathVariable Integer id, Model model) {
@@ -106,4 +106,12 @@ public class DemandeController {
         return "redirect:/demandeClient";
     }
 
+    @GetMapping("/duree/{idDemande}")
+    public String voirDuree(@PathVariable Integer idDemande, Model model) {
+
+        model.addAttribute("durees",
+                demandeStatusService.getDureesEntreStatus(idDemande));
+
+        return "demande/duree_status";
+    }
 }

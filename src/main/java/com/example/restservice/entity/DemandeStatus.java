@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "t_demande_status")
 public class DemandeStatus {
@@ -22,23 +21,49 @@ public class DemandeStatus {
     private Status status;
 
     private String observation;
-    
-    @Column(name = "date_status", insertable = false, updatable = false)
+
+    @Column(name = "date_status")
     private LocalDateTime dateStatus;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public Demande getDemande() { return demande; }
-    public void setDemande(Demande demande) { this.demande = demande; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
+    public Demande getDemande() {
+        return demande;
+    }
 
-    public LocalDateTime getDateStatus() { return dateStatus; }
-    public void setDateStatus(LocalDateTime dateStatus) { this.dateStatus = dateStatus; }
+    public void setDemande(Demande demande) {
+        this.demande = demande;
+    }
 
-    public String getObservation() {return observation;}
-    public void setObservation(String observation) {this.observation = observation;}
+    public Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDateStatus() {
+        return dateStatus;
+    }
+
+    public void setDateStatus(LocalDateTime dateStatus) {
+        this.dateStatus = dateStatus;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+  
 }
