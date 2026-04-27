@@ -152,7 +152,7 @@
 
 <main class="main">
 
-    <!-- TOP -->
+   
     <div class="topbar">
         <h1>Liste des devis du client</h1>
     </div>
@@ -165,13 +165,13 @@
 
         <c:otherwise>
 
-            <!-- HEADER -->
+          
             <div class="section-header">
                 <h2>Devis disponibles</h2>
                 <span class="badge-count">${devis.size()} devis</span>
             </div>
 
-            <!-- TABLE -->
+            
             <div class="table-card">
                 <table>
                     <thead>

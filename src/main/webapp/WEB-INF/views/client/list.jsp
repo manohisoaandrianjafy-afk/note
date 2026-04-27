@@ -162,8 +162,6 @@
 <body>
 
 <main class="main">
-
-    <!-- TOPBAR -->
     <div class="topbar">
         <h1>Liste des clients</h1>
 
@@ -172,13 +170,12 @@
         </a>
     </div>
 
-    <!-- HEADER -->
     <div class="section-header">
         <h2>Clients enregistrés</h2>
         <span class="badge-count">${clients.size()} clients</span>
     </div>
 
-    <!-- TABLE -->
+    
     <div class="table-card">
         <table>
             <thead>

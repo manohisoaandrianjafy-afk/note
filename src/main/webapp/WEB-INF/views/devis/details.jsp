@@ -150,12 +150,12 @@
 
         <main class="main">
 
-            <!-- TITLE -->
+           
             <div class="topbar">
                 <h1>Détails du devis</h1>
             </div>
 
-            <!-- INFOS -->
+            
             <div class="info-grid">
 
                 <div class="info-card">
@@ -177,7 +177,7 @@
 
             </div>
 
-            <!-- TABLE -->
+            
             <div class="table-card">
                 <table>
                     <thead>

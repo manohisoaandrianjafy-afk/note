@@ -148,17 +148,17 @@
                 <span class="badge-count">${details.size()} lignes</span>
             </div>
 
-            <!-- INITIALISATION -->
+
             <c:set var="currentType" value="" />
 
             <c:forEach var="d" items="${details}">
 
-                <!-- CHANGEMENT DE TYPE -->
+
                 <c:if test="${d.type ne currentType}">
 
                     <c:set var="currentType" value="${d.type}" />
 
-                    <!-- HEADER TYPE -->
+
                     <div style="
                     margin-top:20px;
                     margin-bottom:10px;
@@ -188,7 +188,7 @@
                         <tbody>
                         </c:if>
 
-                        <!-- ROW -->
+
                         <tr>
                             <td>${d.libelle}</td>
 
@@ -203,7 +203,7 @@
                                     </td>
                                 </tr>
 
-                                <!-- FERMETURE TABLE SI DERNIER OU TYPE CHANGE -->
+
                                 <c:if test="${(empty details[details.indexOf(d)+1]) || details[details.indexOf(d)+1].type ne d.type}">
                                 </tbody>
                             </table>
@@ -212,7 +212,7 @@
 
                 </c:forEach>
 
-                <!-- TOTAL GLOBAL -->
+                
                 <div class="total-box">
                     Total :
                     <fmt:formatNumber value="${totalGeneral}" groupingUsed="true" maxFractionDigits="0"/> Ar
