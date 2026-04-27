@@ -45,6 +45,7 @@ public class Devis {
         this.demande = demande;
     }
 
+    @Column(name = "montant_total")
     private double montantTotal;
 
     public double getMontantTotal() {

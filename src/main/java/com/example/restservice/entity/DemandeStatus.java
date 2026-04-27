@@ -21,8 +21,8 @@ public class DemandeStatus {
     @JoinColumn(name = "id_status")
     private Status status;
 
-    // private LocalDateTime dateStatus;
-
+    private String observation;
+    
     @Column(name = "date_status", insertable = false, updatable = false)
     private LocalDateTime dateStatus;
 
@@ -37,4 +37,8 @@ public class DemandeStatus {
 
     public LocalDateTime getDateStatus() { return dateStatus; }
     public void setDateStatus(LocalDateTime dateStatus) { this.dateStatus = dateStatus; }
+
+    public String getObservation() {return observation;}
+    public void setObservation(String observation) {this.observation = observation;}
+
 }

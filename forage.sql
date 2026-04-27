@@ -74,7 +74,8 @@ CREATE TABLE t_demande_status (
         FOREIGN KEY (id_status)
         REFERENCES t_status(id)
 );
-ALTER TABLE t_demande_status ADD COLUMN observation VARCHAR(100)
+ALTER TABLE t_demande_status 
+ADD COLUMN observation VARCHAR(100);
 
 
 CREATE TABLE t_typedevis (
