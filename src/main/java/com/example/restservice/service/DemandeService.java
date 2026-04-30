@@ -97,8 +97,6 @@ public class DemandeService {
             if (ds != null) {
                 d.setLastStatus(ds.getStatus().getLibelle());
                 d.setLastObservation(ds.getObservation());
-
-                // ✅ AJOUT ICI
                 d.setLastDateStatus(ds.getDateStatus());
 
             } else {

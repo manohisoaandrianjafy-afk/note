@@ -73,6 +73,7 @@
 <form action="/demandeClient/updateObservation" method="post">
 
     <input type="hidden" name="idDemande" value="${demande.id}" />
+     <input type="hidden" name="idStatusDemande" value="${status.id}" />
 
     <label>Observation :</label>
     <input type="text" name="observation" />

@@ -14,12 +14,14 @@ import com.example.restservice.entity.DemandeStatus;
 import com.example.restservice.entity.DureeHeureFixe;
 import com.example.restservice.entity.DureeHeureFixeDTO;
 import com.example.restservice.entity.DureeStatusDTO;
+import com.example.restservice.entity.Indicateur;
 import com.example.restservice.entity.Status;
 import com.example.restservice.entity.T_DureeChangementStatut;
 import com.example.restservice.repository.DemandeRepository;
 import com.example.restservice.repository.DemandeStatusRepository;
 import com.example.restservice.repository.DureeHeureFixeRepository;
 import com.example.restservice.repository.DureeRepository;
+import com.example.restservice.repository.IndicateurRepository;
 import com.example.restservice.repository.StatusRepository;
 
 @Service
@@ -39,6 +41,12 @@ public class DemandeStatusService {
     @Autowired
     private DureeHeureFixeRepository dureeHeureFixeRepo;
 
+    @Autowired
+    private IndicateurRepository indicateurRepo;
+
+    @Autowired
+    private IndicateurService indicateurService;
+
     public void addStatus(Integer idDemande, Integer idStatus, String observation, String dateStatus) {
 
         Demande demande = demandeRepo.findById(idDemande).orElse(null);
@@ -48,34 +56,131 @@ public class DemandeStatusService {
         ds.setDemande(demande);
         ds.setStatus(status);
         ds.setObservation(observation);
+        LocalDateTime now;
         if (dateStatus != null && !dateStatus.isEmpty()) {
-            ds.setDateStatus(LocalDateTime.parse(dateStatus));
+            now = LocalDateTime.parse(dateStatus);
         } else {
-            ds.setDateStatus(LocalDateTime.now());
+            now = LocalDateTime.now();
+        }
+        ds.setDateStatus(now);
+        List<DemandeStatus> list = demandeStatusRepo
+                .findByDemandeOrderByDateStatusAsc(idDemande);
+
+        if (!list.isEmpty()) {
+
+            DemandeStatus last = list.get(list.size() - 1);
+
+            long totalMinutes = Duration.between(
+                    last.getDateStatus(),
+                    now).toMinutes();
+
+            int heuresTotal = arrondirHeure(totalMinutes);
+
+            long minutesTravail = calculTravailHeureFixe(
+                    last.getDateStatus(),
+                    now);
+
+            int heuresTravail = arrondirHeure(minutesTravail);
+
+            ds.setDureeTotal(heuresTotal);
+            ds.setDureeTravaille(heuresTravail);
+
+        } else {
+
+            ds.setDureeTotal(0);
+            ds.setDureeTravaille(0);
         }
 
         demandeStatusRepo.save(ds);
-
-        saveDerniereDuree(idDemande);
-        saveDerniereDureeHeureFixe(idDemande);
     }
 
-    public void updateObservationAndDate(Integer idDemande, String observation, String date) {
+    private int arrondirHeure(long totalMinutes) {
 
-        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByIdDesc(idDemande);
+        int heures = (int) (totalMinutes / 60);
+        int minutes = (int) (totalMinutes % 60);
 
-        if (!list.isEmpty()) {
-            DemandeStatus ds = list.get(0);
+        if (minutes >= 30) {
+            heures = heures + 1;
+        } else {
+            heures = heures;
+        }
+
+        return heures;
+    }
+
+    // public void updateObservationAndDate(Integer idDemande, String observation,
+    // String date) {
+
+    // List<DemandeStatus> list =
+    // demandeStatusRepo.findByDemandeOrderByIdDesc(idDemande);
+
+    // if (!list.isEmpty()) {
+    // DemandeStatus ds = list.get(0);
+
+    // ds.setObservation(observation);
+
+    // if (date != null && !date.isEmpty()) {
+    // System.out.println("DATE REÇUE = " + date);
+    // System.out.println("DATE CONVERTIE = " + ds.getDateStatus());
+    // ds.setDateStatus(LocalDateTime.parse(date));
+    // }
+
+    // demandeStatusRepo.save(ds);
+    // }
+    // }
+
+    public void updateObservationAndDate(Integer idStatusDemande, String observation, String date) {
+
+        DemandeStatus ds = demandeStatusRepo.findById(idStatusDemande).orElse(null);
+
+        if (ds != null) {
 
             ds.setObservation(observation);
 
             if (date != null && !date.isEmpty()) {
-                System.out.println("DATE REÇUE = " + date);
-                System.out.println("DATE CONVERTIE = " + ds.getDateStatus());
                 ds.setDateStatus(LocalDateTime.parse(date));
             }
 
             demandeStatusRepo.save(ds);
+            recalculerDurees(ds.getDemande().getId());
+        }
+    }
+
+    private void recalculerDurees(Integer idDemande) {
+
+        List<DemandeStatus> list = demandeStatusRepo
+                .findByDemandeOrderByDateStatusAsc(idDemande);
+
+        for (int i = 0; i < list.size(); i++) {
+
+            DemandeStatus current = list.get(i);
+
+            if (i == 0) {
+                current.setDureeTotal(0);
+                current.setDureeTravaille(0);
+            } else {
+
+                DemandeStatus prev = list.get(i - 1);
+
+                // durée totale
+                long totalMinutes = Duration.between(
+                        prev.getDateStatus(),
+                        current.getDateStatus()).toMinutes();
+
+                int heuresTotal = arrondirHeure(totalMinutes);
+
+                // durée travaillée
+                long minutesTravail = calculTravailHeureFixe(
+                        prev.getDateStatus(),
+                        current.getDateStatus());
+
+                int heuresTravail = arrondirHeure(minutesTravail);
+
+                current.setDureeTotal(heuresTotal);
+                current.setDureeTravaille(heuresTravail);
+            }
+
+            demandeStatusRepo.save(current);
         }
     }
 
@@ -83,6 +188,37 @@ public class DemandeStatusService {
         return demandeStatusRepo.countByStatus();
     }
 
+    // public List<DureeStatusDTO> getDureesEntreStatus(Integer idDemande) {
+
+    // List<DemandeStatus> list = demandeStatusRepo
+    // .findByDemandeOrderByDateStatusAsc(idDemande);
+
+    // List<DureeStatusDTO> result = new ArrayList<>();
+
+    // for (int i = 0; i < list.size() - 1; i++) {
+
+    // DemandeStatus current = list.get(i);
+    // DemandeStatus next = list.get(i + 1);
+
+    // Duration duration = Duration.between(
+    // current.getDateStatus(),
+    // next.getDateStatus());
+
+    // long totalMinutes = duration.toMinutes();
+    // int heures = arrondirHeure(totalMinutes);
+
+    // DureeStatusDTO dto = new DureeStatusDTO();
+    // dto.setFromStatus(current.getStatus().getLibelle());
+    // dto.setToStatus(next.getStatus().getLibelle());
+    // dto.setFromDate(current.getDateStatus());
+    // dto.setToDate(next.getDateStatus());
+    // dto.setDuree(heures + " h");
+
+    // result.add(dto);
+    // }
+
+    // return result;
+    // }
     public List<DureeStatusDTO> getDureesEntreStatus(Integer idDemande) {
 
         List<DemandeStatus> list = demandeStatusRepo
@@ -99,69 +235,65 @@ public class DemandeStatusService {
                     current.getDateStatus(),
                     next.getDateStatus());
 
-            long hours = duration.toHours();
-            long minutes = duration.toMinutesPart();
+            long totalMinutes = duration.toMinutes();
+            int heures = arrondirHeure(totalMinutes);
+
+            // 🔥 chercher indicateur
+            List<Indicateur> indicateurs = indicateurRepo.findByStatus1_IdAndStatus2_Id(
+                    current.getStatus().getId(),
+                    next.getStatus().getId());
+
+            String level = "";
+
+            for (Indicateur ind : indicateurs) {
+
+                if (heures >= ind.getIntervalle1()
+                        && heures < ind.getIntervalle2()) {
+                    level = ind.getLevel().getLevel();
+                }
+            }
 
             DureeStatusDTO dto = new DureeStatusDTO();
             dto.setFromStatus(current.getStatus().getLibelle());
             dto.setToStatus(next.getStatus().getLibelle());
-            dto.setFromDate(current.getDateStatus());
-            dto.setToDate(next.getDateStatus());
-            dto.setDuree(hours + "h " + minutes + "min");
+            dto.setFromDate(current.getDateStatus().toString());
+            dto.setToDate(next.getDateStatus().toString());
+            dto.setDuree(heures + " h");
+            dto.setLevel(level);
 
             result.add(dto);
         }
 
         return result;
     }
+    // public long calculTravailHeureFixe(LocalDateTime start, LocalDateTime end) {
 
-    public void saveDerniereDuree(Integer idDemande) {
+    // long total = 0;
 
-        List<DemandeStatus> list = demandeStatusRepo
-                .findByDemandeOrderByDateStatusAsc(idDemande);
-        if (list.size() < 2)
-            return;
+    // LocalDate current = start.toLocalDate();
+    // LocalDate last = end.toLocalDate();
 
-        DemandeStatus avantDernier = list.get(list.size() - 2);
-        DemandeStatus dernier = list.get(list.size() - 1);
+    // while (!current.isAfter(last)) {
 
-        Duration duration = Duration.between(
-                avantDernier.getDateStatus(),
-                dernier.getDateStatus());
-        long minutesTotal = duration.toMinutes();
+    // LocalDateTime realStart = max(start, current.atTime(8, 0));
+    // LocalDateTime realEnd = min(end, current.atTime(17, 0));
 
-        T_DureeChangementStatut d = new T_DureeChangementStatut();
-        d.setIdDevisUn(avantDernier.getId());
-        d.setIdDevisDeux(dernier.getId());
-        d.setDuree(minutesTotal);
+    // if (realStart.isBefore(realEnd)) {
 
-        dureeRepo.save(d);
-    }
+    // total += overlap(realStart, realEnd,
+    // current.atTime(8, 0),
+    // current.atTime(12, 0));
 
-    public void saveDerniereDureeHeureFixe(Integer idDemande) {
+    // total += overlap(realStart, realEnd,
+    // current.atTime(14, 0),
+    // current.atTime(17, 0));
+    // }
 
-        List<DemandeStatus> list = demandeStatusRepo
-                .findByDemandeOrderByDateStatusAsc(idDemande);
+    // current = current.plusDays(1);
+    // }
 
-        if (list.size() < 2)
-            return;
-
-        DemandeStatus un = list.get(list.size() - 2);
-        DemandeStatus deux = list.get(list.size() - 1);
-
-        long minutes = calculTravailHeureFixe(
-                un.getDateStatus(),
-                deux.getDateStatus());
-
-        DureeHeureFixe d = new DureeHeureFixe();
-        d.setIdDevisUn(un.getId());
-        d.setIdDevisDeux(deux.getId());
-        d.setDuree((int) minutes);
-
-        System.out.println("INSERT DUREE HEURE FIXE = " + minutes);
-
-        dureeHeureFixeRepo.save(d);
-    }
+    // return total;
+    // }
 
     public long calculTravailHeureFixe(LocalDateTime start, LocalDateTime end) {
 
@@ -172,18 +304,21 @@ public class DemandeStatusService {
 
         while (!current.isAfter(last)) {
 
-            LocalDateTime realStart = max(start, current.atTime(8, 0));
-            LocalDateTime realEnd = min(end, current.atTime(17, 0));
+            if (current.getDayOfWeek().getValue() <= 5) {
 
-            if (realStart.isBefore(realEnd)) {
+                LocalDateTime realStart = max(start, current.atTime(8, 0));
+                LocalDateTime realEnd = min(end, current.atTime(17, 0));
 
-                total += overlap(realStart, realEnd,
-                        current.atTime(8, 0),
-                        current.atTime(12, 0));
+                if (realStart.isBefore(realEnd)) {
 
-                total += overlap(realStart, realEnd,
-                        current.atTime(14, 0),
-                        current.atTime(17, 0));
+                    total += overlap(realStart, realEnd,
+                            current.atTime(8, 0),
+                            current.atTime(12, 0));
+
+                    total += overlap(realStart, realEnd,
+                            current.atTime(13, 0),
+                            current.atTime(17, 0));
+                }
             }
 
             current = current.plusDays(1);
@@ -212,6 +347,34 @@ public class DemandeStatusService {
         return a.isBefore(b) ? a : b;
     }
 
+    // public List<DureeHeureFixeDTO> getDureeHeureFixeList(Integer idDemande) {
+
+    // List<DemandeStatus> list = demandeStatusRepo
+    // .findByDemandeOrderByDateStatusAsc(idDemande);
+
+    // List<DureeHeureFixeDTO> result = new ArrayList<>();
+
+    // for (int i = 0; i < list.size() - 1; i++) {
+
+    // DemandeStatus start = list.get(i);
+    // DemandeStatus end = list.get(i + 1);
+
+    // long minutes = calculTravailHeureFixe(
+    // start.getDateStatus(),
+    // end.getDateStatus());
+
+    // DureeHeureFixeDTO dto = new DureeHeureFixeDTO();
+    // dto.setFromStatus(start.getStatus().getLibelle());
+    // dto.setToStatus(end.getStatus().getLibelle());
+    // int heures = arrondirHeure(minutes);
+    // dto.setDuree(heures);
+
+    // result.add(dto);
+    // }
+
+    // return result;
+    // }
+
     public List<DureeHeureFixeDTO> getDureeHeureFixeList(Integer idDemande) {
 
         List<DemandeStatus> list = demandeStatusRepo
@@ -228,14 +391,61 @@ public class DemandeStatusService {
                     start.getDateStatus(),
                     end.getDateStatus());
 
+            int heures = arrondirHeure(minutes);
+
+            String couleur = indicateurService.getLevelCouleur(
+                    start.getStatus().getLibelle(),
+                    end.getStatus().getLibelle(),
+                    heures);
+
             DureeHeureFixeDTO dto = new DureeHeureFixeDTO();
             dto.setFromStatus(start.getStatus().getLibelle());
             dto.setToStatus(end.getStatus().getLibelle());
-            dto.setDuree((int) minutes);
+            dto.setDuree(heures);
+            dto.setCouleur(couleur);
 
             result.add(dto);
         }
 
         return result;
     }
+
+    public List<DemandeStatus> getByDemande(Integer idDemande) {
+        return demandeStatusRepo.findByDemandeOrderByDateStatusAsc(idDemande);
+    }
+
+    public DemandeStatus getById(Integer id) {
+        return demandeStatusRepo.findById(id).orElse(null);
+    }
+
+    public int getTotalDureeTotal(Integer idDemande) {
+
+        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByDateStatusAsc(idDemande);
+
+        int total = 0;
+
+        for (DemandeStatus ds : list) {
+            if (ds.getDureeTotal() != null) {
+                total = total + ds.getDureeTotal();
+            }
+        }
+
+        return total;
+    }
+
+    public int getTotalDureeTravaille(Integer idDemande) {
+
+        List<DemandeStatus> list = demandeStatusRepo.findByDemandeOrderByDateStatusAsc(idDemande);
+
+        int total = 0;
+
+        for (DemandeStatus ds : list) {
+            if (ds.getDureeTravaille() != null) {
+                total = total + ds.getDureeTravaille();
+            }
+        }
+
+        return total;
+    }
+
 }

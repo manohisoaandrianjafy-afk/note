@@ -72,7 +72,7 @@
         <form action="/demandeClient/saveStatus" method="post">
 
             <input type="hidden" name="idDemande" value="${demande.id}" />
-
+   <input type="hidden" name="idStatusDemande" value="${status.id}" />
             <label>Status :</label>
             <select name="idStatus">
                 <c:forEach items="${statuses}" var="s">

@@ -6,11 +6,36 @@ public class DureeStatusDTO {
 
     private String fromStatus;
     private String toStatus;
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+    private String fromDate;
+    public void setFromDate(String fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public String getFromDate() {
+        return fromDate;
+    }
+
+    private String toDate;
+    public String getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(String toDate) {
+        this.toDate = toDate;
+    }
+
     private String duree;
+    private String level; 
 
     // getters et setters
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     public String getFromStatus() {
         return fromStatus;
@@ -28,21 +53,7 @@ public class DureeStatusDTO {
         this.toStatus = toStatus;
     }
 
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
-        this.fromDate = fromDate;
-    }
-
-    public LocalDateTime getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(LocalDateTime toDate) {
-        this.toDate = toDate;
-    }
+ 
 
     public String getDuree() {
         return duree;

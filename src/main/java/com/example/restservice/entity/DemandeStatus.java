@@ -65,5 +65,27 @@ public class DemandeStatus {
         this.observation = observation;
     }
 
-  
+    @Column(name = "duree_total")
+    private Integer dureeTotal;
+
+    public Integer getDureeTotal() {
+        return dureeTotal;
+    }
+
+    public void setDureeTotal(Integer dureeTotal) {
+        this.dureeTotal = dureeTotal;
+    }
+
+    @Column(name = "duree_travaille")
+    private Integer dureeTravaille;
+
+    public Integer getDureeTravaille() {
+        return dureeTravaille;
+    }
+
+    public void setDureeTravaille(Integer dureeTravaille) {
+        this.dureeTravaille = dureeTravaille;
+    }
+
+
 }

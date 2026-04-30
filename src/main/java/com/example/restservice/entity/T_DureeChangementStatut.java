@@ -1,7 +1,7 @@
 package com.example.restservice.entity;
 
 import jakarta.persistence.*;
-import java.sql.Time;
+
 
 @Entity
 @Table(name = "t_duree_changement_statut")

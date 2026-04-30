@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.restservice.entity.Demande;
-import com.example.restservice.repository.DureeHeureFixeRepository;
+import com.example.restservice.entity.DemandeStatus;
 import com.example.restservice.service.DemandeService;
 import com.example.restservice.service.DemandeStatusService;
 import com.example.restservice.service.StatusService;
@@ -29,9 +29,6 @@ public class DemandeController {
 
     @Autowired
     private DemandeStatusService demandeStatusService;
-   
-    @Autowired
-    private DureeHeureFixeRepository dureeHeureFixeRepo;
 
     @GetMapping
     public String list(Model model) {
@@ -87,8 +84,11 @@ public class DemandeController {
     public String historique(@PathVariable Integer idClient, Model model) {
         List<Demande> demandes = service.getDemandesByClient(idClient);
         model.addAttribute("demandes", demandes);
+        model.addAttribute("demandeStatusService", demandeStatusService);
+         model.addAttribute("dureeService", demandeStatusService);
         return "demande/historique";
     }
+
 
     // @GetMapping("/historique/{idClient}")
     // public String historique(@PathVariable Integer idClient, Model model) {
@@ -97,17 +97,53 @@ public class DemandeController {
     // return "demande/historique";
     // }
 
+    // @GetMapping("/editObservation/{id}")
+    // public String editObservation(@PathVariable Integer id, Model model) {
+    // Demande demande = service.getById(id);
+    // model.addAttribute("demande", demande);
+    // return "demande/edit_observation_date";
+    // }
+
+    // @GetMapping("/editObservation/{id}")
+    // public String editObservation(@PathVariable Integer id, Model model) {
+
+    // // récupérer le DERNIER status (ou celui que tu veux modifier)
+    // List<DemandeStatus> list = demandeStatusService
+    // .getByDemande(id);
+
+    // if (!list.isEmpty()) {
+    // DemandeStatus lastStatus = list.get(list.size() - 1);
+    // model.addAttribute("status", lastStatus);
+    // }
+
+    // return "demande/edit_observation_date";
+    // }
+
     @GetMapping("/editObservation/{id}")
     public String editObservation(@PathVariable Integer id, Model model) {
-        Demande demande = service.getById(id);
-        model.addAttribute("demande", demande);
+
+        DemandeStatus status = demandeStatusService.getById(id);
+
+        model.addAttribute("status", status);
+
         return "demande/edit_observation_date";
     }
+    // @PostMapping("/updateObservation")
+    // public String updateObservation(@RequestParam Integer idDemande,
+    // @RequestParam String observation,
+    // @RequestParam String date) {
+    // demandeStatusService.updateObservationAndDate(idDemande, observation, date);
+    // return "redirect:/demandeClient";
+    // }
 
     @PostMapping("/updateObservation")
-    public String updateObservation(@RequestParam Integer idDemande, @RequestParam String observation,
+    public String updateObservation(
+            @RequestParam Integer idStatusDemande,
+            @RequestParam String observation,
             @RequestParam String date) {
-        demandeStatusService.updateObservationAndDate(idDemande, observation, date);
+
+        demandeStatusService.updateObservationAndDate(idStatusDemande, observation, date);
+
         return "redirect:/demandeClient";
     }
 

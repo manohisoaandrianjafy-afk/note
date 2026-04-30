@@ -8,14 +8,26 @@
     <tr>
         <th>Status départ</th>
         <th>Status arrivée</th>
-        <th>Durée (minutes)</th>
+        <th>Durée</th>
     </tr>
 
     <c:forEach items="${durees}" var="d">
-        <tr>
+
+        <c:set var="bg" value="white" />
+
+        <c:if test="${d.couleur == 'Critique'}">
+            <c:set var="bg" value="#ffcccc"/>
+        </c:if>
+
+        <c:if test="${d.couleur == 'Eleve'}">
+            <c:set var="bg" value="#fff3cd"/>
+        </c:if>
+
+        <tr style="background-color:${bg}">
             <td>${d.fromStatus}</td>
             <td>${d.toStatus}</td>
-            <td><b>${d.duree} min</b></td>
+            <td><b>${d.duree} h</b></td>
         </tr>
+
     </c:forEach>
 </table>

@@ -13,15 +13,15 @@
             *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
             
             :root {
-                --primary:    #5B6EF5;
+                --primary: #5B6EF5;
                 --primary-lt: #EEF0FE;
-                --bg:         #F4F6FB;
-                --surface:    #FFFFFF;
-                --border:     #E8EAF0;
-                --text:       #1A1D2E;
-                --muted:      #8B8FA8;
-                --radius:     14px;
-                --shadow:     0 2px 14px rgba(0,0,0,.06);
+                --bg: #F4F6FB;
+                --surface: #FFFFFF;
+                --border: #E8EAF0;
+                --text: #1A1D2E;
+                --muted: #8B8FA8;
+                --radius: 14px;
+                --shadow: 0 2px 14px rgba(0,0,0,.06);
             }
             
             body {
@@ -30,21 +30,15 @@
                 color: var(--text);
             }
             
-            .main {
-                padding: 32px;
-            }
+            .main { padding: 32px; }
             
-            /* TOPBAR */
-            .topbar {
-                margin-bottom: 28px;
-            }
+            .topbar { margin-bottom: 28px; }
             
             .topbar h1 {
                 font-size: 22px;
                 font-weight: 700;
             }
             
-            /* EMPTY STATE */
             .empty {
                 color: var(--muted);
                 font-style: italic;
@@ -54,10 +48,7 @@
                 border: 1px solid var(--border);
             }
             
-            /* DEMANDE CARD */
-            .demande-card {
-                margin-bottom: 20px;
-            }
+            .demande-card { margin-bottom: 20px; }
             
             .demande-header {
                 background: var(--surface);
@@ -68,7 +59,6 @@
                 font-weight: 600;
             }
             
-            /* TABLE */
             .table-card {
                 background: var(--surface);
                 border-radius: 0 0 var(--radius) var(--radius);
@@ -82,9 +72,7 @@
                 border-collapse: collapse;
             }
             
-            thead {
-                background: #F8F9FC;
-            }
+            thead { background: #F8F9FC; }
             
             th {
                 padding: 13px 18px;
@@ -101,15 +89,10 @@
                 border-bottom: 1px solid var(--border);
             }
             
-            tr:last-child td {
-                border-bottom: none;
-            }
+            tr:last-child td { border-bottom: none; }
             
-            tbody tr:hover {
-                background: #F8F9FF;
-            }
+            tbody tr:hover { background: #F8F9FF; }
             
-            /* STATUS PILL */
             .pill {
                 padding: 4px 10px;
                 border-radius: 20px;
@@ -119,6 +102,15 @@
                 color: var(--primary);
             }
             
+            .total-box {
+                background: #eef0fe;
+                padding: 10px 18px;
+                border: 1px solid #e8eaf0;
+                font-weight: 600;
+                color: #5B6EF5;
+                display: flex;
+                gap: 20px;
+            }
         </style>
     </head>
 
@@ -126,7 +118,6 @@
 
         <main class="main">
 
-            
             <div class="topbar">
                 <h1>Historique des demandes</h1>
             </div>
@@ -143,12 +134,25 @@
 
                         <div class="demande-card">
 
-                            
+                            <!-- HEADER -->
                             <div class="demande-header">
                                 Demande du ${d.dateDemande} — ${d.lieu}
+
+                                <!-- SOMME TOTALE -->
+                                <div class="total-box">
+                                    <div>
+                                        Durée totale :
+                                        ${dureeService.getTotalDureeTotal(d.id)} h
+                                    </div>
+
+                                    <div>
+                                        Durée travaillée :
+                                        ${dureeService.getTotalDureeTravaille(d.id)} h
+                                    </div>
+                                </div>
                             </div>
 
-                            
+                            <!-- TABLE -->
                             <div class="table-card">
                                 <table>
 
@@ -157,11 +161,16 @@
                                             <th>Statut</th>
                                             <th>Observation</th>
                                             <th>Date</th>
+                                            <th>Durée totale</th>
+                                            <th>Durée travaillée</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
+
                                         <c:forEach items="${d.statuts}" var="s">
+
                                             <tr>
 
                                                 <td>
@@ -181,22 +190,35 @@
 
                                                 <td>${s.dateStatus}</td>
 
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
+                                                <td>${s.dureeTotal} h</td>
 
-                                </table>
-                            </div>
+                                                <td>${s.dureeTravaille} h</td>
 
+                                                <td>
+                                                    <a href="/demandeClient/editObservation/${s.id}"
+                                                    style="color:#3498db;text-decoration:none;">
+                                                    Modifier
+                                                </a>
+                                            </td>
+
+                                        </tr>
+
+                                    </c:forEach>
+
+                                </tbody>
+
+                            </table>
                         </div>
 
-                    </c:forEach>
+                    </div>
 
-                </c:otherwise>
+                </c:forEach>
 
-            </c:choose>
+            </c:otherwise>
 
-        </main>
+        </c:choose>
 
-    </body>
+    </main>
+
+</body>
 </html>

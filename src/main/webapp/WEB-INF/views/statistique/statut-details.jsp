@@ -50,7 +50,7 @@
                 border-radius: var(--radius);
                 border: 1px solid var(--border);
                 box-shadow: var(--shadow);
-                overflow: hidden;
+                overflow: hidden; 
                 margin-top: 16px;
             }
             
@@ -200,7 +200,7 @@
 
             <!-- BACK -->
             <a href="${pageContext.request.contextPath}/statistique" class="back">
-                ⬅ Retour
+             Retour
             </a>
 
         </main>

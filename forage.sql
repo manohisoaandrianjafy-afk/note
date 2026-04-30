@@ -143,6 +143,10 @@ CREATE TABLE t_demande_status (
 
 ALTER TABLE t_demande_status ADD COLUMN observation VARCHAR(100);
 
+ALTER TABLE t_demande_status ADD COLUMN duree_total INT;
+
+ALTER TABLE t_demande_status ADD COLUMN duree_travaille INT;
+
 CREATE TABLE t_typedevis (
     id SERIAL PRIMARY KEY,
     libelle VARCHAR(100) NOT NULL
@@ -178,29 +182,62 @@ CREATE TABLE t_duree_changement_statut (
     CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux) REFERENCES t_demande_status (id) ON DELETE CASCADE
 );
 
-
 -------Format avec heure determine
-CREATE TABLE t_heure_fixe(
+CREATE TABLE t_heure_fixe (
     id SERIAL PRIMARY KEY,
     heure_debut TIME,
     heure_fin TIME,
     heure_pause TIME
 );
-INSERT INTO t_heure_fixe (heure_debut, heure_fin, heure_pause)
-VALUES ('08:00:00', '17:00:00', '02:00:00');
+
+INSERT INTO
+    t_heure_fixe (
+        heure_debut,
+        heure_fin,
+        heure_pause
+    )
+VALUES (
+        '08:00:00',
+        '17:00:00',
+        '02:00:00'
+    );
 
 CREATE TABLE t_duree_changement_statut_heure_fixe (
     id SERIAL PRIMARY KEY,
     id_devis_un INT NOT NULL,
     id_devis_deux INT NOT NULL,
     duree INT,
-    CONSTRAINT fk_dcs_un FOREIGN KEY (id_devis_un)
-        REFERENCES t_demande_status (id) ON DELETE CASCADE,
-    CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux)
-        REFERENCES t_demande_status (id) ON DELETE CASCADE
+    CONSTRAINT fk_dcs_un FOREIGN KEY (id_devis_un) REFERENCES t_demande_status (id) ON DELETE CASCADE,
+    CONSTRAINT fk_dcs_deux FOREIGN KEY (id_devis_deux) REFERENCES t_demande_status (id) ON DELETE CASCADE
 );
 
+CREATE TABLE t_level (
+    id SERIAL PRIMARY KEY,
+    level VARCHAR(100)
+);
 
+INSERT INTO t_level (level) VALUES ('Critique'), ('Eleve');
+
+CREATE TABLE t_indicateur (
+    id SERIAL PRIMARY KEY,
+    id_status1 INT,
+    id_status2 INT,
+    intervalle1 INT,
+    intervalle2 INT,
+    id_level INT,
+    CONSTRAINT fk_status_un FOREIGN KEY (id_status1) REFERENCES t_status (id),
+    CONSTRAINT fk_status_deux FOREIGN KEY (id_status2) REFERENCES t_status (id),
+    CONSTRAINT fk_level FOREIGN KEY (id_level) REFERENCES t_level (id)
+);
+INSERT INTO t_indicateur (id_status1, id_status2, intervalle1, intervalle2, id_level)
+VALUES
+(1, 2, 24, 48, 2); -- Eleve
+INSERT INTO t_indicateur (id_status1, id_status2, intervalle1, intervalle2, id_level)
+VALUES
+(2, 4, 12, 24, 2);
+INSERT INTO t_indicateur (id_status1, id_status2, intervalle1, intervalle2, id_level)
+VALUES
+(8, 9, 48, 72, 2);
 SELECT SUM(montant_total) FROM t_devis WHERE id_type = 1;
 
 SELECT SUM(montant_total) FROM t_devis WHERE id_type = 2;
